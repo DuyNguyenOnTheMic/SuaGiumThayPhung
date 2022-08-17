@@ -2,8 +2,10 @@ using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Security.Principal;
 using System.Web;
+using System.Web.Helpers;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
@@ -21,6 +23,7 @@ namespace CAPTimeTableIT
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             //Enable  
             System.Web.Optimization.BundleTable.EnableOptimizations = true;
+            AntiForgeryConfig.UniqueClaimTypeIdentifier = ClaimTypes.NameIdentifier;
         }
     }
 }
