@@ -1,0 +1,595 @@
+﻿@using CAPTimeTableIT.Models.Users;
+@using CAPTimeTableIT.Common;
+@model CAPTimeTableIT.Models.TimeTableView.AssignTimeTableViewModel
+
+@{
+    Layout = "~/Views/Shared/_TimeTableLayout.cshtml";
+    ViewBag.Title = "Phân Công Giảng Dạy";
+    var hover = Model.ClassViewModels;
+    var user = Model.ApplicationUsers;
+    var index = 0;
+    UserRoleViewModel currentUserRole = ViewBag.UserRole;
+    var Semesters = ViewBag.Semesters as SelectList;
+    int latestSemesterId = ViewBag.LatestSemesterId;
+}
+<link href="~/Content/capstone/tooltip.css" rel="stylesheet" />
+@*<link href="~/Content/capstone/assign-class.css" rel="stylesheet" />*@
+<div class="main-container">
+    <div class="pd-ltr-20 xs-pd-20-10">
+        <div class="min-height-200px">
+            <div class="page-header">
+                <div class="row">
+                    <div class="col-md-5 col-sm-5">
+                        <nav aria-label="breadcrumb" role="navigation">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="@Url.Action("Calendar","Home")">Trang chủ</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Phân công giảng dạy</li>
+                            </ol>
+                        </nav>
+                    </div>
+                    @*@if (this.User.IsInRole("BCN Khoa"))
+                {*@
+                    @if (latestSemesterId > 0)
+                    {
+                        <div class="col-md-6 col-sm-6 text-right" style="white-space: nowrap">
+                            <div class="dropdown">
+                                <select id="semesterSelectedList" class="custom-select2 form-control" style="width: 20%; height: 38px;" required name="semesterId">
+                                    @foreach (var semester in Semesters)
+                                    {
+                                        if (semester.Value == latestSemesterId.ToString())
+                                        {
+                                            <option value='@semester.Value' selected>Học kì @semester.Text</option>
+                                        }
+                                        else
+                                        {
+                                            <option value='@semester.Value'>Học kì @semester.Text</option>
+                                        }
+
+                                    }
+                                </select>
+                                @if (this.User.IsInRole("BCN Khoa"))
+                                {
+                                    <a class="btn btn-primary" href="@Url.Action("Import", "Import")" role="button" style="background-color: #222659">
+                                        Import
+                                    </a>
+                                    <a class="btn btn-primary" href="@Url.Action("ReplaceTimeTable", "Import")" role="button" style="background-color: #222659">
+                                        Thay thế
+                                    </a>
+                                    <button id="btnExport" class="btn btn-primary" href="@Url.Action("ExportTimeTable", "Import")" aria-controls="example" type="button" style="background-color: #28a745; border-color: #28a745 ">
+                                        Export
+                                    </button>
+                                }
+                            </div>
+                        </div>
+                    }
+                    @*}*@
+                </div>
+            </div>
+            <label style="font-size:20px ; color:red"><b>LƯU Ý</b></label> <br />
+            <textarea disabled name="state" class="subject practice">MÔN THỰC HÀNH</textarea>
+            <textarea disabled name="state" class="subject theory" style="color:white;">MÔN LÝ THUYẾT</textarea>
+            <br />
+            <label style="font-size:20px;">Số lớp đã phân công: <span id="totalAssignedClass"></span>/<span id="totalClass"></span></label> 
+            <div class="tableFixHead">
+                <table border="1" align="center">
+                    <thead style="background-color:#650000; color:white; font-size:20px; font-weight:bold">
+                        <tr class="first" style="padding: 40px 20px; text-align: center;">
+                            <th>THỨ</th>
+                            @foreach (var day in Model.day)
+                            {
+                            <th colspan="15" style="text-align: center" class="lastCellBorder">
+                                THỨ @day
+                            </th>
+                            }
+                        </tr>
+                        <tr @*class="second"*@ style="padding: 15px 15px; text-align: center">
+                            <th>TIẾT</th>
+                            @{
+                                var countKhungGio = Model.khungGio.Count;
+                                foreach (var day in Model.day)
+                                {
+                                    for (var i = 0; i < countKhungGio; i++)
+                                    {
+                                        if (i == countKhungGio - 1)
+                                        {
+                                            <th class="lastCellBorder" colspan="3" align="center" style="padding: 15px 30px; white-space: nowrap">
+                                                @Model.khungGio[i]
+                                            </th>
+                                        }
+                                        else
+                                        {
+                                            <th colspan="3" align="center" style="padding: 15px 30px; white-space: nowrap">
+                                                @Model.khungGio[i]
+                                            </th>
+                                        }
+                                    }
+                                }
+                            }
+
+                        </tr>
+                            </thead>
+                            <tbody style="background-color: #F5F5F5 ">
+                                <tr>
+                                    @foreach (var subject in Model.SubjectViewModels)
+                                    {
+                                        var firstElement = Model.ClassViewModels[index];
+                                    <tr>
+                                        <td style="background-color: #222659; color: white; padding: 50px 30px; font-size: 25px; font-weight: bold " align="center">@subject.Name</td>
+
+                                        @foreach (var day in Model.day)
+                                        {
+                                            var countSoTiet = Model.sotiet.Count;
+                                            var indexTiet = -1;
+                                            foreach (var tiet in Model.sotiet)
+                                            {
+                                                indexTiet++;
+                                                var lastCellBorder = "";
+                                                if (indexTiet == countSoTiet - 1)
+                                                {
+                                                    lastCellBorder = "lastCellBorder";
+                                                }
+                                                var classes = Model.ClassViewModels.Where(t => t.SubjectInfo.Id == subject.Id && t.ThuS == day && t.TietS == tiet).ToList();
+                                                if (classes.Count > 0)
+                                                {
+                                                    <td class="@lastCellBorder" colspan="3">
+                                                        @foreach (var item in classes)
+                                                        {
+                                                            var opacityClass = "";
+                                                            if (string.IsNullOrEmpty(item.TeacherId))
+                                                            {
+                                                                opacityClass = "opacity";
+                                                            }
+                                                            index++;
+                                                            if (item.LoaiHP == "Thực hành")
+                                                            {
+                                                                <div id="container-class-@item.ClassId" class="con-tooltip top container-class practice @opacityClass">
+                                                                    <label style="color: #650000">@item.MaLHP</label><br />
+                                                                    <input type="hidden" id="class-@index" value="@item.ClassId" />
+                                                                    <div class="form-group" style="margin: auto">
+                                                                        @if (currentUserRole.RoleName == CapstoneSystem.SubjectRole)
+                                                                        {
+                                                                            if (item.LastModifiedAssignerId == currentUserRole.UserId || string.IsNullOrEmpty(item.TeacherId))
+                                                                            {
+                                                                                <select id="teacher-@index" class="custom-select2 form-control" name="state" style="width: 80%; height: 38px;">
+                                                                                    <option value="">Chưa Phân Công</option>
+                                                                                    @foreach (var userlist in Model.ApplicationUsers)
+                                                                                    {
+                                                                                        if (!string.IsNullOrEmpty(item.TeacherId) && item.TeacherId == userlist.UserId)
+                                                                                        {
+                                                                                            <option value='@userlist.UserId' data-email="@userlist.Email" selected>@userlist.UserName</option>
+                                                                                        }
+                                                                                        else
+                                                                                        {
+                                                                                            <option value='@userlist.UserId' data-email="@userlist.Email">@userlist.UserName</option>
+                                                                                        }
+                                                                                    }
+                                                                                </select>
+                                                                                <input type="submit" value="&check;" class="btn btn-success assignButton" tmp-value="@index" />
+                                                                                if (this.User.IsInRole("BCN Khoa"))
+                                                                                {
+                                                                                    <input type="button" value="x" class="btn btn-danger deleteButton" tmp-value="@index" />
+                                                                                }
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                var assignTeacher = Model.ApplicationUsers.FirstOrDefault(t => t.UserId == item.TeacherId);
+                                                                                <span style="color: #650000">@assignTeacher.UserName</span>
+                                                                            }
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <select id="teacher-@index" class="custom-select2 form-control" name="state" style="width: 80%; height: 38px;">
+                                                                                <option value="">Chưa Phân Công</option>
+                                                                                @foreach (var userlist in Model.ApplicationUsers)
+                                                                                {
+                                                                                    if (!string.IsNullOrEmpty(item.TeacherId) && item.TeacherId == userlist.UserId)
+                                                                                    {
+                                                                                        <option value='@userlist.UserId' data-email="@userlist.Email" selected>@userlist.UserName</option>
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        <option value='@userlist.UserId' data-email="@userlist.Email">@userlist.UserName</option>
+                                                                                    }
+                                                                                }
+                                                                            </select>
+                                                                            <input type="submit" value="&check;" class="btn btn-success assignButton" tmp-value="@index" />
+                                                                            if (this.User.IsInRole("BCN Khoa"))
+                                                                            {
+                                                                                <input type="button" value="x" class="btn btn-danger deleteButton" tmp-value="@index" />
+                                                                            }
+                                                                        }
+                                                                    </div>
+
+                                                                    <div class="tooltip">
+
+                                                                        <label>Loại HP: @item.LoaiHP</label><br />
+                                                                        <label>Phòng: @item.Phong</label>
+                                                                    </div>
+                                                                </div>
+                                                            }
+                                                            else
+                                                            {
+                                                                <div id="container-class-@item.ClassId" class="con-tooltip top container-class theory @opacityClass">
+                                                                    <label style="color:white">@item.MaLHP</label><br />
+                                                                    <input type="hidden" id="class-@index" value="@item.ClassId" />
+                                                                    <div class="form-group">
+                                                                        @if (currentUserRole.RoleName == CapstoneSystem.SubjectRole)
+                                                                        {
+                                                                            if (item.LastModifiedAssignerId == currentUserRole.UserId || string.IsNullOrEmpty(item.TeacherId))
+                                                                            {
+                                                                                <select id="teacher-@index" class="custom-select2 form-control" name="state" style="width: 80%; height: 38px;">
+                                                                                    <option value="">Chưa Phân Công</option>
+                                                                                    @foreach (var userlist in Model.ApplicationUsers)
+                                                                                    {
+                                                                                        if (!string.IsNullOrEmpty(item.TeacherId) && item.TeacherId == userlist.UserId)
+                                                                                        {
+                                                                                            <option value='@userlist.UserId' data-email="@userlist.Email" selected>@userlist.UserName</option>
+                                                                                        }
+                                                                                        else
+                                                                                        {
+                                                                                            <option value='@userlist.UserId' data-email="@userlist.Email">@userlist.UserName</option>
+                                                                                        }
+                                                                                    }
+                                                                                </select>
+                                                                                <input type="submit" value="&check;" class="btn btn-success assignButton" tmp-value="@index" />
+                                                                                if (this.User.IsInRole("BCN Khoa"))
+                                                                                {
+                                                                                    <input type="button" value="x" class="btn btn-danger deleteButton" tmp-value="@index" />
+                                                                                }
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                var assignTeacher = Model.ApplicationUsers.FirstOrDefault(t => t.UserId == item.TeacherId);
+                                                                                <span>@assignTeacher.UserName</span>
+                                                                            }
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <select id="teacher-@index" class="custom-select2 form-control" name="state" style="width: 80%; height: 38px;">
+                                                                                <option value="">Chưa Phân Công</option>
+                                                                                @foreach (var userlist in Model.ApplicationUsers)
+                                                                                {
+                                                                                    if (!string.IsNullOrEmpty(item.TeacherId) && item.TeacherId == userlist.UserId)
+                                                                                    {
+                                                                                        <option value='@userlist.UserId' data-email="@userlist.Email" selected>@userlist.UserName</option>
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        <option value='@userlist.UserId' data-email="@userlist.Email">@userlist.UserName</option>
+                                                                                    }
+                                                                                }
+                                                                            </select>
+                                                                            <input type="submit" value="&check;" class="btn btn-success assignButton" tmp-value="@index" />
+                                                                            if (this.User.IsInRole("BCN Khoa"))
+                                                                            {
+                                                                                <input type="button" value="x" class="btn btn-danger deleteButton" tmp-value="@index" />
+                                                                            }
+                                                                        }
+                                                                    </div>
+
+                                                                    <div class="tooltip">
+
+                                                                        <label>Loại HP: @item.LoaiHP</label><br />
+                                                                        <label>Phòng: @item.Phong</label>
+                                                                    </div>
+                                                                </div>
+
+                                                            }
+
+                                                        }
+
+                                                    </td>
+                                                }
+                                                else
+                                                {
+                                                    <td class="@lastCellBorder" colspan="3" align="center" style="padding: 15px 15px; min-width:245px !important">
+                                                    </td>
+                                                }
+                                            }
+                                        }
+                                    </tr>
+                                }
+                                </tbody>
+                            </table>
+                        </div>
+            
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-body">
+                <p>Phân công thành công</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="myDeleteModal" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-body">
+                <p>Xóa thành công</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="errorModal" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Thông báo lỗi</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="errorMessage">Modal body text goes here.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="confirmModal" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Xác nhận</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="confirmMessage">Modal body text goes here.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-danger" data-dismiss="modal" id="cancelButton">Hủy bỏ</button>
+                <button type="button" class="btn btn-outline-primary" data-dismiss="modal" id="forceSave">Tiếp tục lưu</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="modal fade" id="confirmDeletedModal" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Xác nhận</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="confirmMessage">Bạn có muốn xóa lớp học này không?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Hủy bỏ</button>
+                <button type="button" class="btn btn-outline-primary" data-dismiss="modal" id="confirmDeleteClass">Xóa</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+@section Scripts {
+<script src="~/Scripts/helpers/capstone-extensions.js"></script>
+<script type="text/javascript">
+var totalClass = @Model.TotalClass;
+var totalAssignedClass = @Model.TotalAssignedClass;
+$(document).ready(function () {
+    //set height var first header
+    var firstheight = $('.first').height();
+    $("thead tr.second th, thead tr.second td").css("top", firstheight);
+
+    refreshSummaryClass();
+    $('.assignButton').click(function () {
+        //get class ID
+        var index = $(this).attr('tmp-value');
+        var classId = $('#class-' + index).val();
+        var teacherId = $('#teacher-' + index).val();
+        //var teacherDropdownList = document.getElementById("teacher-" + index);
+        var teacherEmail = $("#teacher-" + index).find(':selected').data('email');//teacherDropdownList.options[teacherDropdownList.selectedIndex].text;
+        var teacherValidation = validateTeacherAsync(classId, teacherId);//promise se goi trong tuong lai gan
+        teacherValidation.then(function (teacherValidationResponse) {
+            if (teacherValidationResponse.status) {
+                assignTeacher(teacherId, teacherEmail, classId);
+            }
+            else {
+                //case greater than 3 assigned classes
+                if (teacherValidationResponse.hasConfirm) {
+                    $('#confirmMessage').html(teacherValidationResponse.message);
+                    //1. save to data storage
+                    $("body").data("tmpTeacherData", {
+                        "teacherId": teacherId,
+                        "teacherEmail": teacherEmail,
+                        "classId": classId,
+                        "index": index
+                    });
+                    $('#confirmModal').modal();
+                }
+                else {
+                    var teacherObj = getTeacherIdByClassIdAsync(classId);
+                    teacherObj.then(function (teacherResponse) {
+                        if (teacherResponse.status) {
+                            $('#teacher-' + index).val(teacherResponse.teacherId).change();
+                        }
+                    });
+                    $('#errorMessage').html(teacherValidationResponse.message);
+                    $('#errorModal').modal();
+                }
+            }
+
+        });
+    });
+
+    $('#cancelButton').click(function () {
+        var teacherData = $("body").data("tmpTeacherData");
+        var teacherObj = getTeacherIdByClassIdAsync(teacherData.classId);
+        teacherObj.then(function (teacherResponse) {
+            if (teacherResponse.status) {
+                $('#teacher-' + teacherData.index).val(teacherResponse.teacherId).change();
+            }
+        });
+    });
+
+    $('.deleteButton').click(function() {
+        //get class ID
+        var index = $(this).attr('tmp-value');
+        var classId = $('#class-' + index).val();
+        $("body").data("tmpClassData", {
+            "classId": classId
+        });
+        $('#confirmDeletedModal').modal();
+        //get class ID
+
+    });
+
+    $('#confirmDeleteClass').click(function() {
+        var classObj = $("body").data("tmpClassData");
+        var classId = classObj.classId;
+        var url = "@Url.Content("~/import/ValidateDeleteClass/")" + classId;
+        $.ajax({
+            url: url,
+            method: 'POST'
+        }).done(function (response) {
+            if (response.status == false) {
+                //show error message
+                $('#errorMessage').html(response.message);
+                $('#errorModal').modal();
+            }
+            else {
+                //call delete method
+                var deleteUrl = "@Url.Content("~/import/DeleteClass/")" + classId;
+                $.ajax({
+                    url: deleteUrl,
+                    method: 'POST'
+                }).done(function (response) {
+                    if (response.status == false) {
+                        //show error message
+                        $('#errorMessage').html("Đã có lỗi trong quá trình xóa");
+                        $('#errorModal').modal();
+                    }
+                    else {
+                        //call delete modal
+                        var containerClassId = '#container-class-' + classId;
+                        $(containerClassId).remove();
+                        $('#myDeleteModal').modal();
+                        //refresh count class report
+                        totalClass = response.data.totalClass;
+                        totalAssignedClass = response.data.totalAssignedClass;
+                        refreshSummaryClass();
+                    }
+                    console.log(response);
+                });
+            }
+            console.log(response);
+        });
+    });
+
+    $('#forceSave').click(function () {
+        //2.get data from data storage
+        var teacherData = $("body").data("tmpTeacherData");
+        assignTeacher(teacherData.teacherId, teacherData.teacherEmail, teacherData.classId);
+    });
+    $('#semesterSelectedList').on('change', function () {
+        var url = '@Url.Content("~/Import/AssignLecture/")' + this.value;
+        window.location.assign(url);
+    });
+
+    $('#btnExport').click(function () {
+        downloadTimeTable();
+    });
+});
+
+function refreshSummaryClass() {
+    $('#totalClass').html(totalClass);
+    $('#totalAssignedClass').html(totalAssignedClass);
+}
+
+function assignTeacher(teacherId, teacherEmail, classId) {
+    var data = {
+        teacherId: teacherId,
+        teacherEmail: teacherEmail,
+        classId: classId
+    };
+    $.ajax({
+        url: "@Url.Content("~/import/AssignTeacher")",
+        method: 'POST',
+        data: data
+    }).done(function (responseData) {
+        $('#myModal').modal();
+        totalClass = responseData.data.totalClass;
+        totalAssignedClass = responseData.data.totalAssignedClass;
+        //refresh opacity
+        var containerId = '#container-class-' + classId;
+        var hasOpactity = $(containerId).hasClass('opacity');
+        if (teacherId == '') {
+            if (hasOpactity == false) {
+                $(containerId).addClass('opacity');
+            }
+        }
+        else {
+            if (hasOpactity) {
+                $(containerId).removeClass('opacity');
+            }
+        }
+        refreshSummaryClass();
+    });
+}
+
+function validateTeacherAsync(classId, teacherId) {
+    var data = {
+        newTeacherId: teacherId,
+        classId: classId
+    };
+    var promise = $.ajax({
+        url: "@Url.Content("~/import/ValidateTeacher")",
+        method: 'POST',
+        data: data
+    }).done(function (response) {
+    });
+    return promise;
+}
+
+function getTeacherIdByClassIdAsync(classId) {
+    var url = "@Url.Content("~/import/GetTeacherIdByClassId/")" + classId;//controller/action/id
+    var promise = $.ajax({
+        url: url,
+        method: 'POST'
+    }).done(function (response) {
+
+    });
+    return promise;
+}
+
+function downloadTimeTable() {
+    var semesterId = $('#semesterSelectedList').val();
+    $.ajax({
+        url: "@Url.Content("~/Import/ExportTimeTable/")" +  semesterId,
+        method: 'POST'
+    }).done(function (data, jqXHR, response) {
+        if (jqXHR == "success") {
+            var capstone = $C();
+            capstone.exportFile(data.message, data.filename);
+        }
+    });
+}
+</script>
+}

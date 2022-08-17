@@ -1,0 +1,14 @@
+﻿@model CAPTimeTableIT.Models.Asssign.AssignTeacherEmailTemplate
+@{
+    Layout = "~/Views/Shared/_EmailLayout.cshtml";
+}
+<div>
+    <div>Kính chào giảng viên @Model.FullName,</div>
+    <div class="mt">Hệ thống phân công giảng dạy đã phân công thầy/cô vào lớp học:</div>
+    <div class="mt">Giảng viên: @Model.FullName</div>
+    <div>Phân công lớp: @Model.MaLhp</div>
+    <div>Môn học: @Model.Subject</div>
+    <div>Thời gian: @string.Format("{0} - Tiết {1}", Model.Thu, Model.Tiet)</div>
+    <div>Người phân công: @Model.Assigner</div>
+    <div class="mt">Trân trọng,</div>
+</div>

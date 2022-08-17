@@ -1,0 +1,372 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{1BD2D6AE-9662-44F4-8B49-2D3F6630E400}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CAPTimeTableIT.Infrastructure</RootNamespace>
+    <AssemblyName>CAPTimeTableIT.Infrastructure</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AutoMapper, Version=4.2.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.4.2.1\lib\net45\AutoMapper.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="EPPlus, Version=5.8.8.0, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\EPPlus.5.8.8\lib\net45\EPPlus.dll</HintPath>
+    </Reference>
+    <Reference Include="ExcelDataReader, Version=3.6.0.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
+      <HintPath>..\packages\ExcelDataReader.3.6.0\lib\net45\ExcelDataReader.dll</HintPath>
+    </Reference>
+    <Reference Include="ExcelDataReader.DataSet, Version=3.6.0.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
+      <HintPath>..\packages\ExcelDataReader.DataSet.3.6.0\lib\net35\ExcelDataReader.DataSet.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.3\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="MailKit, Version=3.2.0.0, Culture=neutral, PublicKeyToken=4e064fe7c44a8f1b, processorArchitecture=MSIL">
+      <HintPath>..\packages\MailKit.3.2.0\lib\net47\MailKit.dll</HintPath>
+    </Reference>
+    <Reference Include="MimeKit, Version=3.2.0.0, Culture=neutral, PublicKeyToken=bede1c8a46c66814, processorArchitecture=MSIL">
+      <HintPath>..\packages\MimeKit.3.2.0\lib\net47\MimeKit.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.EntityFramework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.2.3\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.IO.RecyclableMemoryStream, Version=1.4.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IO.RecyclableMemoryStream.1.4.1\lib\net46\Microsoft.IO.RecyclableMemoryStream.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Annotations, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ComponentModel.Annotations.4.7.0\lib\net461\System.ComponentModel.Annotations.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Threading.Tasks" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ApplicationDbContext.cs" />
+    <Compile Include="Entities\ApplicationUser.cs" />
+    <Compile Include="Migrations\202112111425011_AddNewSemesterTable.cs" />
+    <Compile Include="Migrations\202112111425011_AddNewSemesterTable.Designer.cs">
+      <DependentUpon>202112111425011_AddNewSemesterTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112181458071_InitialDatabase.cs" />
+    <Compile Include="Migrations\202112181458071_InitialDatabase.designer.cs">
+      <DependentUpon>202112181458071_InitialDatabase.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112181503598_AddSubjectNewTable.cs" />
+    <Compile Include="Migrations\202112181503598_AddSubjectNewTable.designer.cs">
+      <DependentUpon>202112181503598_AddSubjectNewTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112181510276_AddCapDaysNewTable.cs" />
+    <Compile Include="Migrations\202112181510276_AddCapDaysNewTable.designer.cs">
+      <DependentUpon>202112181510276_AddCapDaysNewTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112181511431_AddCapWeeksNewTable.cs" />
+    <Compile Include="Migrations\202112181511431_AddCapWeeksNewTable.designer.cs">
+      <DependentUpon>202112181511431_AddCapWeeksNewTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112181513297_CapDayAndCapWeekAddFK.cs" />
+    <Compile Include="Migrations\202112181513297_CapDayAndCapWeekAddFK.designer.cs">
+      <DependentUpon>202112181513297_CapDayAndCapWeekAddFK.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112181517165_AddSemestersNewTable.cs" />
+    <Compile Include="Migrations\202112181517165_AddSemestersNewTable.designer.cs">
+      <DependentUpon>202112181517165_AddSemestersNewTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112181519199_SemesterAndCapWeekAddFK.cs" />
+    <Compile Include="Migrations\202112181519199_SemesterAndCapWeekAddFK.designer.cs">
+      <DependentUpon>202112181519199_SemesterAndCapWeekAddFK.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112181525326_AddClassesNewTable.cs" />
+    <Compile Include="Migrations\202112181525326_AddClassesNewTable.designer.cs">
+      <DependentUpon>202112181525326_AddClassesNewTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112181531318_AddTimeTablesNewTable.cs" />
+    <Compile Include="Migrations\202112181531318_AddTimeTablesNewTable.designer.cs">
+      <DependentUpon>202112181531318_AddTimeTablesNewTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112181543184_TimeTableClassSemesterAddFK.cs" />
+    <Compile Include="Migrations\202112181543184_TimeTableClassSemesterAddFK.designer.cs">
+      <DependentUpon>202112181543184_TimeTableClassSemesterAddFK.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112221343240_UpdateClassesTable.cs" />
+    <Compile Include="Migrations\202112221343240_UpdateClassesTable.designer.cs">
+      <DependentUpon>202112221343240_UpdateClassesTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112221418528_AddClassDeatilsTable.cs" />
+    <Compile Include="Migrations\202112221418528_AddClassDeatilsTable.designer.cs">
+      <DependentUpon>202112221418528_AddClassDeatilsTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112260945015_CodeLHP1Column.cs" />
+    <Compile Include="Migrations\202112260945015_CodeLHP1Column.designer.cs">
+      <DependentUpon>202112260945015_CodeLHP1Column.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112281809042_RolessFK.cs" />
+    <Compile Include="Migrations\202112281809042_RolessFK.designer.cs">
+      <DependentUpon>202112281809042_RolessFK.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201011218103_UpdateClassTable.cs" />
+    <Compile Include="Migrations\202201011218103_UpdateClassTable.designer.cs">
+      <DependentUpon>202201011218103_UpdateClassTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201021745283_UpdateCLassTableV2.cs" />
+    <Compile Include="Migrations\202201021745283_UpdateCLassTableV2.designer.cs">
+      <DependentUpon>202201021745283_UpdateCLassTableV2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201030728342_DropClassAndTimeTableFK.cs" />
+    <Compile Include="Migrations\202201030728342_DropClassAndTimeTableFK.designer.cs">
+      <DependentUpon>202201030728342_DropClassAndTimeTableFK.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201030730003_ClassAndTimeTableFK.cs" />
+    <Compile Include="Migrations\202201030730003_ClassAndTimeTableFK.designer.cs">
+      <DependentUpon>202201030730003_ClassAndTimeTableFK.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202191752361_UpdateClassModelLV2.cs" />
+    <Compile Include="Migrations\202202191752361_UpdateClassModelLV2.designer.cs">
+      <DependentUpon>202202191752361_UpdateClassModelLV2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202203071422597_TeacherEmailClassModel.cs" />
+    <Compile Include="Migrations\202203071422597_TeacherEmailClassModel.designer.cs">
+      <DependentUpon>202203071422597_TeacherEmailClassModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202203071429435_DeleteTeacherNameClassModel.cs" />
+    <Compile Include="Migrations\202203071429435_DeleteTeacherNameClassModel.designer.cs">
+      <DependentUpon>202203071429435_DeleteTeacherNameClassModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202203071431340_AddTeacherEmailClassModel.cs" />
+    <Compile Include="Migrations\202203071431340_AddTeacherEmailClassModel.designer.cs">
+      <DependentUpon>202203071431340_AddTeacherEmailClassModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202203081657434_AddTableProfile.cs" />
+    <Compile Include="Migrations\202203081657434_AddTableProfile.designer.cs">
+      <DependentUpon>202203081657434_AddTableProfile.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202203271238420_AddTrongColumninClassesTable.cs" />
+    <Compile Include="Migrations\202203271238420_AddTrongColumninClassesTable.designer.cs">
+      <DependentUpon>202203271238420_AddTrongColumninClassesTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202203271244355_RemoveBlankColumnInClassesTable.cs" />
+    <Compile Include="Migrations\202203271244355_RemoveBlankColumnInClassesTable.designer.cs">
+      <DependentUpon>202203271244355_RemoveBlankColumnInClassesTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202204131644484_AddStaffCode.cs" />
+    <Compile Include="Migrations\202204131644484_AddStaffCode.designer.cs">
+      <DependentUpon>202204131644484_AddStaffCode.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202204292059399_Addcontraint.cs" />
+    <Compile Include="Migrations\202204292059399_Addcontraint.designer.cs">
+      <DependentUpon>202204292059399_Addcontraint.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202205031731234_ChangeMaNganhToStringType.cs" />
+    <Compile Include="Migrations\202205031731234_ChangeMaNganhToStringType.designer.cs">
+      <DependentUpon>202205031731234_ChangeMaNganhToStringType.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202205191229251_RemoveAtributeFromSemester.cs" />
+    <Compile Include="Migrations\202205191229251_RemoveAtributeFromSemester.designer.cs">
+      <DependentUpon>202205191229251_RemoveAtributeFromSemester.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\Classes\CountClassModel.cs" />
+    <Compile Include="Models\Classes\KeyClass.cs" />
+    <Compile Include="Models\ErrorMessage.cs" />
+    <Compile Include="Models\ExportClassModel.cs" />
+    <Compile Include="Models\Semesters\SemesterSummary.cs" />
+    <Compile Include="Models\Statistics\StatisticForUser.cs" />
+    <Compile Include="Models\Statistics\SummaryReport.cs" />
+    <Compile Include="Models\Subjects\ClassViewModel.cs" />
+    <Compile Include="Models\Subjects\SubjectSummaryModel.cs" />
+    <Compile Include="Models\UserRoleModel.cs" />
+    <Compile Include="Models\Users\CapstoneUser.cs" />
+    <Compile Include="Models\ValidationResult.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\IRepository.cs" />
+    <Compile Include="Repositories\Repository.cs" />
+    <Compile Include="Services\Abstract\ICapDayService.cs" />
+    <Compile Include="Services\Abstract\ICapstoneEmailService.cs" />
+    <Compile Include="Services\Abstract\ICapWeekService.cs" />
+    <Compile Include="Services\Abstract\IClassService.cs" />
+    <Compile Include="Services\Abstract\IExcelService.cs" />
+    <Compile Include="Services\Abstract\IRoleService.cs" />
+    <Compile Include="Services\Abstract\ISemesterService.cs" />
+    <Compile Include="Services\Abstract\IStatisticService.cs" />
+    <Compile Include="Services\Abstract\ISubjectService.cs" />
+    <Compile Include="Services\Abstract\IUserProfileService.cs" />
+    <Compile Include="Services\Abstract\IUserRoleService.cs" />
+    <Compile Include="Services\Abstract\IUserService.cs" />
+    <Compile Include="Services\Implement\CapDayService.cs" />
+    <Compile Include="Services\Implement\CapWeekService.cs" />
+    <Compile Include="Services\Implement\ClassService.cs" />
+    <Compile Include="Services\Implement\EmailService.cs" />
+    <Compile Include="Services\Implement\ExcelService.cs" />
+    <Compile Include="Services\Implement\RoleService.cs" />
+    <Compile Include="Services\Implement\SemesterService.cs" />
+    <Compile Include="Services\Implement\StatisticService.cs" />
+    <Compile Include="Services\Implement\SubjectService.cs" />
+    <Compile Include="Services\Implement\UserProfileService.cs" />
+    <Compile Include="Services\Implement\UserRoleService.cs" />
+    <Compile Include="Services\Implement\UserService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CAPTimeTableIT.Common\CAPTimeTableIT.Common.csproj">
+      <Project>{3cc22fa6-4cea-4416-a55f-089b0cfa6098}</Project>
+      <Name>CAPTimeTableIT.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CAPTimeTableIT.Domain\CAPTimeTableIT.Domain.csproj">
+      <Project>{a30f763e-c21b-451d-8f44-29b1b3ae1e05}</Project>
+      <Name>CAPTimeTableIT.Domain</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="readme.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\202112111425011_AddNewSemesterTable.resx">
+      <DependentUpon>202112111425011_AddNewSemesterTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112181458071_InitialDatabase.resx">
+      <DependentUpon>202112181458071_InitialDatabase.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112181503598_AddSubjectNewTable.resx">
+      <DependentUpon>202112181503598_AddSubjectNewTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112181510276_AddCapDaysNewTable.resx">
+      <DependentUpon>202112181510276_AddCapDaysNewTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112181511431_AddCapWeeksNewTable.resx">
+      <DependentUpon>202112181511431_AddCapWeeksNewTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112181513297_CapDayAndCapWeekAddFK.resx">
+      <DependentUpon>202112181513297_CapDayAndCapWeekAddFK.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112181517165_AddSemestersNewTable.resx">
+      <DependentUpon>202112181517165_AddSemestersNewTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112181519199_SemesterAndCapWeekAddFK.resx">
+      <DependentUpon>202112181519199_SemesterAndCapWeekAddFK.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112181525326_AddClassesNewTable.resx">
+      <DependentUpon>202112181525326_AddClassesNewTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112181531318_AddTimeTablesNewTable.resx">
+      <DependentUpon>202112181531318_AddTimeTablesNewTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112181543184_TimeTableClassSemesterAddFK.resx">
+      <DependentUpon>202112181543184_TimeTableClassSemesterAddFK.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112221343240_UpdateClassesTable.resx">
+      <DependentUpon>202112221343240_UpdateClassesTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112221418528_AddClassDeatilsTable.resx">
+      <DependentUpon>202112221418528_AddClassDeatilsTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112260945015_CodeLHP1Column.resx">
+      <DependentUpon>202112260945015_CodeLHP1Column.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112281809042_RolessFK.resx">
+      <DependentUpon>202112281809042_RolessFK.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201011218103_UpdateClassTable.resx">
+      <DependentUpon>202201011218103_UpdateClassTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201021745283_UpdateCLassTableV2.resx">
+      <DependentUpon>202201021745283_UpdateCLassTableV2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201030728342_DropClassAndTimeTableFK.resx">
+      <DependentUpon>202201030728342_DropClassAndTimeTableFK.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201030730003_ClassAndTimeTableFK.resx">
+      <DependentUpon>202201030730003_ClassAndTimeTableFK.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202191752361_UpdateClassModelLV2.resx">
+      <DependentUpon>202202191752361_UpdateClassModelLV2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202203071422597_TeacherEmailClassModel.resx">
+      <DependentUpon>202203071422597_TeacherEmailClassModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202203071429435_DeleteTeacherNameClassModel.resx">
+      <DependentUpon>202203071429435_DeleteTeacherNameClassModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202203071431340_AddTeacherEmailClassModel.resx">
+      <DependentUpon>202203071431340_AddTeacherEmailClassModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202203081657434_AddTableProfile.resx">
+      <DependentUpon>202203081657434_AddTableProfile.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202203271238420_AddTrongColumninClassesTable.resx">
+      <DependentUpon>202203271238420_AddTrongColumninClassesTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202203271244355_RemoveBlankColumnInClassesTable.resx">
+      <DependentUpon>202203271244355_RemoveBlankColumnInClassesTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202204131644484_AddStaffCode.resx">
+      <DependentUpon>202204131644484_AddStaffCode.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202204292059399_Addcontraint.resx">
+      <DependentUpon>202204292059399_Addcontraint.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202205031731234_ChangeMaNganhToStringType.resx">
+      <DependentUpon>202205031731234_ChangeMaNganhToStringType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202205191229251_RemoveAtributeFromSemester.resx">
+      <DependentUpon>202205191229251_RemoveAtributeFromSemester.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.props'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.targets'))" />
+  </Target>
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />
+</Project>

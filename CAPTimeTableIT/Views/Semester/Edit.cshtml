@@ -1,0 +1,109 @@
+﻿@model CAPTimeTableIT.Models.SemesterEditViewModel
+@{
+    ViewBag.Title = "Chỉnh sửa học kì";
+    int startYear = ViewBag.StartYear;
+    int endYear = ViewBag.EndYear;
+}
+
+<div class="main-container">
+    <div class="pd-ltr-20 xs-pd-20-10">
+        <div class="min-height-200px">
+            <div class="page-header">
+                <div class="row">
+                    <div class="col-md-6 col-sm-12">
+                        <nav aria-label="breadcrumb" role="navigation">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href=@Url.Action("ManageSemester", "Semester")>Quản lý học kì</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Chỉnh sửa Học kì</li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="pd-20 bg-white border-radius-4 box-shadow mb-30">
+                    <h4 class="text-blue h4">Chỉnh sửa học kì</h4>
+                    <br />
+                    <form>
+                        <div class="form-group row">
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                            <label class="col-sm-12 col-md-2 col-form-label">Học kì: </label>
+                            <div class="col-sm-12 col-md-3">
+                                @*<input class="form-control" type="text" placeholder="@Model.Name" readonly>*@
+                                @Html.TextBoxFor(m => m.Name, new { @class = "form-control", disabled = "disabled", @readonly = "readonly" } )
+                                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-12 col-md-2 col-form-label">Năm bắt đầu: </label>
+                            <div class="col-sm-12 col-md-3">
+                                <select name="StartYear" class="custom-select2 form-control">
+                                    @for (var i = startYear; i <= endYear; i++)
+                                    {
+                                        if (i == Model.StartYear)
+                                        {
+                                            <option selected value="@i">@i</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@i">@i</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-12 col-md-2 col-form-label">Năm kết thúc: </label>
+                            <div class="col-sm-12 col-md-3">
+                                <select name="EndYear" class="custom-select2 form-control">
+                                    @for (var i = startYear; i <= endYear; i++)
+                                    {
+                                        if (i == Model.EndYear)
+                                        {
+                                            <option selected value="@i">@i</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@i">@i</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-12 col-md-2 col-form-label">Tuần bắt đầu: </label>
+                            <div class="col-sm-12 col-md-3">
+                                @Html.TextBoxFor(m => m.ListWeek, new { placeholder = Model.ListWeek, @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-12 col-md-2 col-form-label">Ngày bắt đầu: </label>
+                            <div class="col-sm-12 col-md-3">
+                                @*@Html.TextBoxFor(m => m.StartTime, new { placeholder = Model.StartTime, @class = "form-control date-picker1" })*@
+                                <input name="StartTime" type="text" class="form-control date-picker1" value="@Model.StartTime.ToString("dd/MM/yyyy")" data-language='vi' />
+                            </div>
+                        </div>
+                        <div>
+                            <button type="submit" class="btn btn-outline-success" onclick="return confirm('Bạn có muốn lưu?')">Lưu</button>
+                            <a href="@Url.Action("ManageSemester", "Semester")" type="button" style="float: right" class="btn btn-outline-danger" onclick="return confirm('Bạn có muốn hủy?')">Hủy</a>
+                        </div>
+                    </form>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".date-picker1").datepicker({ language: "vi", autoClose: !0, dateFormat: "dd/mm/yyyy" });
+        })
+    </script>
+
+}

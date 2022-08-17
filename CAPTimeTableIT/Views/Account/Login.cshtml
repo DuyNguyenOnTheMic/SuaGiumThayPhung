@@ -1,0 +1,42 @@
+﻿@using CAPTimeTableIT.Models
+@model LoginViewModel
+@{
+    ViewBag.Title = "Đăng nhập";
+    Layout = null;
+}
+
+<link rel="stylesheet" type="text/css" href=@Url.Content("~/res/vendors/styles/core.css")>
+<link rel="stylesheet" type="text/css" href=@Url.Content("~/res/vendors/styles/icon-font.min.css")>
+<link rel="stylesheet" type="text/css" href=@Url.Content("~/res/vendors/styles/style.css")>
+
+<div class="pre-loader">
+    <div class="pre-loader-box">
+        <div class="loader-logo"><img src="@Url.Content("~/res/vendors/images/download.png")" alt=""></div>
+        <div class='loader-progress' id="progress_div">
+            <div class='bar' id='bar1'></div>
+        </div>
+        <div class='percent' id='percent1'>0%</div>
+    </div>
+</div>
+
+<div class="login-wrap d-flex align-items-center flex-wrap justify-content-center">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-6 col-lg-7">
+                <img src=@Url.Content("~/res/vendors/images/login-page-img.png") alt="">
+            </div>
+            <div class="col-md-6 col-lg-5">
+                <div class="login-box bg-white box-shadow border-radius-10">
+                    <section id="socialLoginForm">
+                        @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl })
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- js -->
+<script src=@Url.Content("~/res/vendors/scripts/core.js")></script>
+<script src=@Url.Content("~/res/vendors/scripts/script.min.js")></script>
+<script src=@Url.Content("~/res/vendors/scripts/process.js")></script>
+<script src=@Url.Content("~/res/vendors/scripts/layout-settings.js")></script>

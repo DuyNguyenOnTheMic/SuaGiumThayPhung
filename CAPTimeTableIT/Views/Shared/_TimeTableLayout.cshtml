@@ -1,0 +1,359 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <!-- Basic Page Info -->
+    <meta charset="utf-8">
+    <title>@ViewBag.Title</title>
+
+    <!-- Site favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="@Url.Content("~/res/vendors/images/apple-touch-icon.png")">
+    <link rel="icon" type="image/png" sizes="32x32" href="@Url.Content("~/res/vendors/images/download2.png")">
+    <link rel="icon" type="image/png" sizes="16x16" href="@Url.Content("~/res/vendors/images/download2.png")">
+
+    <!-- Mobile Specific Metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- CSS -->
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/res/vendors/styles/core.css")">
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/res/vendors/styles/icon-font.min.css")">
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/res/vendors/styles/style.css")">
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/res/src/plugins/fullcalendar/fullcalendar.css")">
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/res/src/plugins/dropzone/src/dropzone.css")">
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/res/src/plugins/sweetalert2/sweetalert2.css")">
+    @*@Styles.Render("~/bundles/timetable")*@
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/capstone/assign-class.css")">
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/capstone/time-table.css")">
+</head>
+<body>
+    <div class="header">
+        <div class="header-left">
+            <div class="menu-icon dw dw-menu"></div>
+            <div class="search-toggle-icon dw dw-search2" data-toggle="header_search"></div>
+        </div>
+        <div class="header-right">
+            <div class="dashboard-setting user-notification">
+                <div class="dropdown">
+                    <a class="dropdown-toggle no-arrow" href="javascript:;" data-toggle="right-sidebar">
+                        <i class="dw dw-settings2"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="user-info-dropdown">
+                <div class="dropdown">
+                    <a class="dropdown-toggle" href="#" role="button" data-toggle="dropdown">
+                        <span class="user-icon">
+                            <img src="@Url.Content("~/res/vendors/images/download.png")" alt="">
+                        </span>
+                        <span class="user-name">
+                            @User.Identity.Name
+                        </span>
+                    </a>
+                    @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <div class="dropdown-menu dropdown-menu-right dropdown-menu-icon-list">
+                            <a class="dropdown-item" href="javascript:document.getElementById('logoutForm').submit()" aria-expanded="false">
+                                <i data-feather="log-out" class="dw dw-logout"></i>Đăng Xuất
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="right-sidebar">
+        <div class="sidebar-title">
+            <h3 class="weight-600 font-16 text-blue">
+                Layout Settings
+                <span class="btn-block font-weight-400 font-12">User Interface Settings</span>
+            </h3>
+            <div class="close-sidebar" data-toggle="right-sidebar-close">
+                <i class="icon-copy ion-close-round"></i>
+            </div>
+        </div>
+        <div class="right-sidebar-body customscroll">
+            <div class="right-sidebar-body-content">
+                <h4 class="weight-600 font-18 pb-10">Header Background</h4>
+                <div class="sidebar-btn-group pb-30 mb-10">
+                    <a href="javascript:void(0);" class="btn btn-outline-primary header-white active">White</a>
+                    <a href="javascript:void(0);" class="btn btn-outline-primary header-dark">Dark</a>
+                </div>
+
+                <h4 class="weight-600 font-18 pb-10">Sidebar Background</h4>
+                <div class="sidebar-btn-group pb-30 mb-10">
+                    <a href="javascript:void(0);" class="btn btn-outline-primary sidebar-light ">White</a>
+                    <a href="javascript:void(0);" class="btn btn-outline-primary sidebar-dark active">Dark</a>
+                </div>
+
+                <h4 class="weight-600 font-18 pb-10">Menu Dropdown Icon</h4>
+                <div class="sidebar-radio-group pb-10 mb-10">
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="sidebaricon-1" name="menu-dropdown-icon" class="custom-control-input" value="icon-style-1" checked="">
+                        <label class="custom-control-label" for="sidebaricon-1"><i class="fa fa-angle-down"></i></label>
+                    </div>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="sidebaricon-2" name="menu-dropdown-icon" class="custom-control-input" value="icon-style-2">
+                        <label class="custom-control-label" for="sidebaricon-2"><i class="ion-plus-round"></i></label>
+                    </div>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="sidebaricon-3" name="menu-dropdown-icon" class="custom-control-input" value="icon-style-3">
+                        <label class="custom-control-label" for="sidebaricon-3"><i class="fa fa-angle-double-right"></i></label>
+                    </div>
+                </div>
+
+                <h4 class="weight-600 font-18 pb-10">Menu List Icon</h4>
+                <div class="sidebar-radio-group pb-30 mb-10">
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="sidebariconlist-1" name="menu-list-icon" class="custom-control-input" value="icon-list-style-1" checked="">
+                        <label class="custom-control-label" for="sidebariconlist-1"><i class="ion-minus-round"></i></label>
+                    </div>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="sidebariconlist-2" name="menu-list-icon" class="custom-control-input" value="icon-list-style-2">
+                        <label class="custom-control-label" for="sidebariconlist-2"><i class="fa fa-circle-o" aria-hidden="true"></i></label>
+                    </div>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="sidebariconlist-3" name="menu-list-icon" class="custom-control-input" value="icon-list-style-3">
+                        <label class="custom-control-label" for="sidebariconlist-3"><i class="dw dw-check"></i></label>
+                    </div>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="sidebariconlist-4" name="menu-list-icon" class="custom-control-input" value="icon-list-style-4" checked="">
+                        <label class="custom-control-label" for="sidebariconlist-4"><i class="icon-copy dw dw-next-2"></i></label>
+                    </div>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="sidebariconlist-5" name="menu-list-icon" class="custom-control-input" value="icon-list-style-5">
+                        <label class="custom-control-label" for="sidebariconlist-5"><i class="dw dw-fast-forward-1"></i></label>
+                    </div>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="sidebariconlist-6" name="menu-list-icon" class="custom-control-input" value="icon-list-style-6">
+                        <label class="custom-control-label" for="sidebariconlist-6"><i class="dw dw-next"></i></label>
+                    </div>
+                </div>
+
+                <div class="reset-options pt-30 text-center">
+                    <button class="btn btn-danger" id="reset-settings">Reset Settings</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="left-side-bar">
+        @if (this.User.IsInRole("Admin"))
+        {
+            <div class="brand-logo">
+                <a href="@Url.Action("Index", "AspNetUsers")">
+                    <img style="margin: auto" src="@Url.Content("~/res/vendors/images/logo-vanlang-mk2.png")" alt="" class="light-logo">
+                    <img style="margin: auto" src="@Url.Content("~/res/vendors/images/logo-vanlang-mk2.png")" alt="" class="dark-logo">
+                </a>
+                <div class="close-sidebar" data-toggle="left-sidebar-close">
+                    <i class="ion-close-round"></i>
+                </div>
+            </div>
+        }
+        @if (this.User.IsInRole("BCN Khoa") || (this.User.IsInRole("Bộ môn")))
+        {
+            <div class="brand-logo">
+                <a href="@Url.Action("Calendar", "Calendar")">
+                    <img style="margin: auto" src="@Url.Content("~/res/vendors/images/logo-vanlang-mk2.png")" alt="" class="dark-logo">
+                    <img style="margin: auto" src="@Url.Content("~/res/vendors/images/logo-vanlang-mk2.png")" alt="" class="light-logo">
+                </a>
+                <div class="close-sidebar" data-toggle="left-sidebar-close">
+                    <i class="ion-close-round"></i>
+                </div>
+            </div>
+        }
+        @if (this.User.IsInRole("Giảng viên"))
+        {
+            <div class="brand-logo">
+                <a href="@Url.Action("PersonalCalendar", "PersonalCalendar")">
+                    <img style="margin: auto" src="@Url.Content("~/res/vendors/images/logo-vanlang-mk2.png")" alt="" class="light-logo">
+                    <img style="margin: auto" src="@Url.Content("~/res/vendors/images/logo-vanlang-mk2.png")" alt="" class="dark-logo">
+                </a>
+                <div class="close-sidebar" data-toggle="left-sidebar-close">
+                    <i class="ion-close-round"></i>
+                </div>
+            </div>
+        }
+        @if (this.User.IsInRole("Chưa Phân Quyền"))
+        {
+            <div class="brand-logo">
+                <a href="@Url.Action("Index", "Home")">
+                    <img style="margin: auto" src="@Url.Content("~/res/vendors/images/logo-vanlang-mk2.png")" alt="" class="light-logo">
+                    <img style="margin: auto" src="@Url.Content("~/res/vendors/images/logo-vanlang-mk2.png")" alt="" class="dark-logo">
+                </a>
+                <div class="close-sidebar" data-toggle="left-sidebar-close">
+                    <i class="ion-close-round"></i>
+                </div>
+            </div>
+        }
+        <div class="menu-block customscroll">
+            <div class="sidebar-menu">
+                <ul id="accordion-menu">
+                    @if (this.User.IsInRole("Admin"))
+                    {
+                        <li>
+                            <a href="@Url.Action("Index", "AspNetUsers")" class="dropdown-toggle no-arrow">
+                                <span class="micon dw dw-house-1"></span><span class="mtext">Trang chủ</span>
+                            </a>
+                        </li>
+                        <li class="dropdown">
+                            <a href="javascript:;" class="dropdown-toggle">
+                                <span class="micon dw dw-library"></span><span class="mtext">Quản lý người dùng</span>
+                            </a>
+                            <ul class="submenu">
+                                <li><a href="@Url.Action("Index", "AspNetUsers")">Danh sách người dùng</a></li>
+                                @*<li><a href="@Url.Action("Index", "AspNetRoles")">Phân quyền</a></li>*@
+                            </ul>
+                            <ul class="submenu">
+                                <li><a href="@Url.Action("UserName", "AspNetUsers")">Hồ sơ người dùng</a></li>
+                                @*<li><a href="@Url.Action("Index", "AspNetRoles")">Phân quyền</a></li>*@
+                            </ul>
+                        </li>
+                    }
+                    @if (this.User.IsInRole("BCN Khoa") || (this.User.IsInRole("Bộ môn")))
+                    {
+                        <li>
+                            <a href="@Url.Action("Calendar", "Calendar")" class="dropdown-toggle no-arrow">
+                                <span class="micon dw dw-house-1"></span><span class="mtext">Trang chủ</span>
+                            </a>
+                        </li>
+                        <li class="dropdown">
+                            <a href="javascript:;" class="dropdown-toggle">
+                                <span class="micon dw dw-calendar1"></span><span class="mtext">Quản lý Thời khoá biểu</span>
+                            </a>
+                            <ul class="submenu">
+                                @if (this.User.IsInRole("BCN Khoa"))
+                                {
+                                    @*<li><a href="@Url.Action("Import", "Import")">Import Thời khóa biểu</a></li>*@
+                                    <li><a href="@Url.Action("ManageSemester", "Semester")">Quản lý học kì</a></li>
+                                    <li><a href="@Url.Action("Index", "Subject")">Danh sách môn học</a></li>
+                                    @*<li><a href="@Url.Action("ImportHistory", "Home")">Lịch sử Import</a></li>*@
+                                }
+                                <li><a href="@Url.Action("AssignLecture", "Import")">Phân công giảng dạy</a></li>
+                                <li><a href="@Url.Action("Calendar", "Calendar")">Thời khóa biểu toàn khoa</a></li>
+                                <li><a href="@Url.Action("Teacher", "Calendar")">Thời khóa biểu theo nhiều giảng viên</a></li>
+                                <li><a href="@Url.Action("PersonalCalendar", "PersonalCalendar")">Thời khóa biểu cá nhân</a></li>
+
+                            </ul>
+                        </li>
+                        if (this.User.IsInRole("BCN Khoa"))
+                        {
+                            <li class="dropdown">
+                                <a href="javascript:;" class="dropdown-toggle">
+                                    <span class="micon dw dw-calendar1"></span><span class="mtext">Quản lý thống kê</span>
+                                </a>
+                                <ul class="submenu">
+                                    <li><a href="@Url.Action("Index", "Statistics")">Thống kê theo học kỳ</a></li>
+                                    <li><a href="@Url.Action("YearlyReport", "Statistics")">Thống kê theo năm</a></li>
+                                    @*<li><a href="@Url.Action("TabularStatistics", "Statistics")">Thống kê dạng bảng</a></li>
+                                        <li><a href="@Url.Action("StatisticsViewTab", "Statistics")">Thống kê theo tab</a></li>*@
+
+                                </ul>
+                            </li>
+                        }
+                        <li>
+                            <a href="@Url.Action("EditUserProfile", "UserProfile")" class="dropdown-toggle no-arrow">
+                                <span class="micon dw dw-calendar2"></span><span class="mtext">Chỉnh sửa hồ sơ</span>
+                            </a>
+                        </li>
+                    }
+                    @if (this.User.IsInRole("Giảng viên"))
+                    {
+                        <li>
+                            <a href="@Url.Action("Calendar", "Calendar")" class="dropdown-toggle no-arrow">
+                                <span class="micon dw dw-house-1"></span><span class="mtext">Trang chủ</span>
+                            </a>
+                        </li>
+                        <li class="dropdown">
+                            <a href="javascript:;" class="dropdown-toggle">
+                                <span class="micon dw dw-calendar1"></span><span class="mtext">Quản lý Thời khoá biểu</span>
+                            </a>
+                            <ul class="submenu">
+                                <li>
+                                    <a href="@Url.Action("Calendar", "Calendar")" class="dropdown-toggle no-arrow">
+                                        <span class="micon dw dw-calendar2"></span><span class="mtext">Thời khóa biểu toàn khoa</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="@Url.Action("PersonalCalendar", "PersonalCalendar")" class="dropdown-toggle no-arrow">
+                                        <span class="micon dw dw-calendar2"></span><span class="mtext">Thời khóa biểu cá nhân</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("EditUserProfile", "UserProfile")" class="dropdown-toggle no-arrow">
+                                <span class="micon dw dw-calendar2"></span><span class="mtext">Chỉnh sửa hồ sơ</span>
+                            </a>
+                        </li>
+                        @*<li>
+                                <a href="@Url.Action("Static", "Home")" class="dropdown-toggle no-arrow">
+                                    <span class="micon dw dw-analytics-21"></span><span class="mtext">Thống kê</span>
+                                </a>
+                            </li>*@
+                    }
+                    @if (this.User.IsInRole("Chưa Phân Quyền"))
+                    {
+                        <li>
+                            <a href="@Url.Action("Index", "Home")" class="dropdown-toggle no-arrow">
+                                <span class="micon dw dw-house-1"></span><span class="mtext">Trang chủ</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("EditUserProfile", "UserProfile")" class="dropdown-toggle no-arrow">
+                                <span class="micon dw dw-calendar2"></span><span class="mtext">Chỉnh sửa hồ sơ</span>
+                            </a>
+                        </li>
+                    }
+
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="mobile-menu-overlay"></div>
+    @RenderBody()
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-119386393-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'UA-119386393-1');</script>
+
+    <script src="~/res/vendors/scripts/echarts.js"></script>
+    <!-- js -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+            crossorigin="anonymous"></script>
+    <script src="@Url.Content("~/res/vendors/scripts/core.js")"></script>
+    <script src="@Url.Content("~/res/vendors/scripts/script.min.js")"></script>
+    <script src="@Url.Content("~/res/vendors/scripts/process.js")"></script>
+    <script src="@Url.Content("~/res/vendors/scripts/layout-settings.js")"></script>
+
+    <script src="@Url.Content("~/res/src/plugins/fullcalendar/fullcalendar.min.js")"></script>
+    <script src="@Url.Content("~/res/vendors/scripts/calendar-setting.js")"></script>
+    <!-- add sweet alert js & css in footer -->
+    <script src="@Url.Content("~/res/src/plugins/sweetalert2/sweetalert2.all.js")"></script>
+    <script src="@Url.Content("~/res/src/plugins/sweetalert2/sweet-alert.init.js")"></script>
+
+    <script src="@Url.Content("~/res/src/plugins/dropzone/src/dropzone.js")"></script>
+
+    <script>
+        Dropzone.autoDiscover = false;
+        $(".dropzone").dropzone({
+            addRemoveLinks: true,
+            removedfile: function (file) {
+                var name = file.name;
+                var _ref;
+                return (_ref = file.previewElement) != null ? _ref.parentNode.removeChild(file.previewElement) : void 0;
+            }
+        });
+    </script>
+
+    @RenderSection("scripts", required: false)
+
+</body>
+</html>

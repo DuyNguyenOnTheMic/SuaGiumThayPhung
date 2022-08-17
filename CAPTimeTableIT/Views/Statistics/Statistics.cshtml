@@ -1,0 +1,92 @@
+﻿@{
+    ViewBag.Title = "Thống kê";
+    int latestSemesterId = ViewBag.LatestSemesterId;
+    var Semesters = ViewBag.Semesters as SelectList;
+}
+
+<div class="main-container">
+    <div class="pd-ltr-20 xs-pd-20-10">
+        <div class="min-height-200px">
+            <div class="page-header">
+                <div class="row">
+                    <div class="col-md-6 col-sm-12">
+                        <nav aria-label="breadcrumb" role="navigation">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="@Url.Action("Index","Statistics")">Trang chủ</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Thống kê</li>
+
+
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <div id="main" style="width: 1500px;height:500px;"></div>
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var semesterId = @latestSemesterId;
+            var dataPromise = getData(semesterId);
+            dataPromise.then(function (teacherHoursDataResponse) {
+                renderBarChart(teacherHoursDataResponse);
+            });            
+        });
+
+        function getData(semesterId) {
+            var promise = $.ajax({
+                url: "@Url.Content("~/Statistics/GetTeacherHourBySemesterId/")" + semesterId,
+                method: 'POST'
+            }).done(function (response) { });
+            return promise;
+        }
+
+        function renderBarChart(response) {
+            //render barchart
+            
+            var data = response.data;
+            // Initialize the echarts instance based on the prepared dom
+            var myChart = echarts.init(document.getElementById('main'));
+
+            var dataForChart = [];
+            for (var i = 0; i < data.length; i++) {
+                var row = [];
+                row.push(data[i].userId);
+                row.push(data[i].fullName);
+                row.push(data[i].totalHours);
+                dataForChart.push(row);
+            }
+            // Specify the configuration items and data for the chart
+            var option = {
+                dataset: [
+                    {
+                        dimensions: ['userId', 'fullName', 'totalHours'],
+                        source: dataForChart
+                    },
+                    {
+                        transform: {
+                            type: 'sort',
+                            config: { dimension: 'totalHours', order: 'asc' }
+                        }
+                    }
+                ],
+                yAxis: {
+                    type: 'category',
+                    @*axisLabel: { interval: 0, rotate: 0 }*@
+                },
+                xAxis: {},
+                series: {
+                    type: 'bar',
+                    encode: { x: 'totalHours', y: 'fullName' },
+                    datasetIndex: 1
+                }
+            };
+
+            // Display the chart using the configuration items and data just specified.
+            myChart.setOption(option);
+        }
+    </script>
+
+}

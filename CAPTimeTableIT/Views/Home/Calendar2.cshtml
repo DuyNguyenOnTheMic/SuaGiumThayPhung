@@ -1,0 +1,166 @@
+﻿@{
+    ViewBag.Title = "Thời khóa biểu cá nhân";
+}
+
+<div class="main-container">
+    <div class="pd-ltr-20 xs-pd-20-10">
+        <div class="min-height-200px">
+            <div class="page-header">
+                <div class="row">
+                    <div class="col-md-6 col-sm-6">
+                        <nav aria-label="breadcrumb" role="navigation">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="@Url.Action("Calendar2","Home")">Trang chủ</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Thời khóa biểu cá nhân </li>
+                            </ol>
+                        </nav>
+                    </div>
+                    @*@if (this.User.IsInRole("BCN Khoa"))
+                        {*@
+
+                    @*}*@
+                </div>
+            </div>
+
+            <div class="card-box mb-30">
+                <div class="pd-20">
+                    <div>
+
+                        <h1 align="center" style="color:#C00000" class="text-center mb-30 weight-600">THỜI KHÁO BIỂU CÁ NHÂN</h1>
+                        <div class="col-md-12 col-sm-12 text-right">
+                            <div class="dropdown">
+                                <select class="custom-select col-2">
+                                    <option selected="">Chọn Giảng viên</option>
+                                    <option value="1">Nguyễn Thị A</option>
+                                    <option value="2">Trần Thị B</option>
+                                    <option value="3">Nguyễn Thị C</option>
+                                </select>
+                                <select class="custom-select col-2">
+                                    <option selected="">Năm học</option>
+                                    <option value="1">2021-2022</option>
+                                    <option value="2">2022-2023</option>
+                                    <option value="3">2023-2024</option>
+                                </select>
+                                <select class="custom-select col-2">
+                                    <option selected="">Học kì</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                </select>
+                                <select class="custom-select col-3">
+                                    <option selected="">11/10/2021 --- 17/10/2021</option>
+                                    <option value="1">One</option>
+                                    <option value="2">Two</option>
+                                    <option value="3">Three</option>
+                                </select>
+                            </div>
+                        </div>
+                        <br />
+                        
+
+                    </div>
+                    <table border="1" align="center" class="table hover multiple-select-row data-table-export nowrap">
+                        <thead style="background-color:coral ">
+
+                            <tr >
+                                <th align="center" style="padding: 20px 10px">
+                                <th colspan="15" style="text-align: left; word-spacing:3px">
+                                    <a>Tiết 1</a>
+                                    <a>Tiết 2</a>
+                                    <a>Tiết 3</a>
+                                <th colspan="15" style="text-align: left; word-spacing:3px; " >
+                                    <a>Tiết 4</a>
+                                    <a>Tiết 5</a>
+                                    <a>Tiết 6</a>
+                                <th colspan="15" style="text-align: left; word-spacing: 3px">
+                                    Tiết 7
+                                    Tiết 8
+                                    Tiết 9
+                                 <th colspan="15" style="text-align: left; word-spacing:3px">
+                                    Tiết 10
+                                    Tiết 11
+                                    Tiết 12
+                                 <th colspan="15" style="text-align: left; word-spacing:3px ">
+                                    Tiết 13
+                                    Tiết 14
+                                    Tiết 15
+
+</tr>
+
+                        </thead>
+                        <tbody style="background-color:antiquewhite">
+                            <tr>
+                                <td style="padding: 10px 30px 70px 10px ; font-weight:bolder; vertical-align:top">MONDAY</td>
+                                <td colspan="9">
+                                    <form style="background-color: aliceblue; border: groove;">
+                                        <label><b>Mã MH: </b></label> <br />
+                                        <label><b>Mã LHP: </b></label> <br />
+                                        <label><b>Tên HP: </b></label> <br />
+                                        <label><b>Loại HP: </b></label> <br />
+                                        <label><b>Phòng: </b></label> <br />
+
+                                    </form>
+                                </td>
+                                <td align="center" colspan="9"></td>
+                                <td align="center" colspan="18"></td>
+                                <td align="center" colspan="18"></td>
+                                <td align="center" colspan="18"></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px 30px 70px 10px ; font-weight:bolder; vertical-align:top">TUESDAY</td>
+                                <td align="center" colspan="9"></td>
+                                <td align="center" colspan="9"></td>
+                                <td align="center" colspan="18"></td>
+                                <td align="center" colspan="18"></td>
+                                <td align="center" colspan="18"></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px 30px 70px 10px ; font-weight:bolder; vertical-align:top">WEDNESDAY</td>
+                                <td align="center" colspan="9"></td>
+                                <td align="center" colspan="9"></td>
+                                <td align="center" colspan="18"></td>
+                                <td align="center" colspan="18"></td>
+                                <td align="center" colspan="18"></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px 30px 70px 10px ; font-weight:bolder; vertical-align:top">THURDAY</td>
+                                <td align="center" colspan="9"></td>
+                                <td align="center" colspan="9"></td>
+                                <td align="center" colspan="18"></td>
+                                <td align="center" colspan="18"></td>
+                                <td align="center" colspan="18"></td>
+                            </tr>
+                            <tr>
+
+                                <td style="padding: 10px 30px 70px 10px ; font-weight:bolder; vertical-align:top">FIRDAY</td>
+                                <td align="center" colspan="9"></td>
+                                <td align="center" colspan="9"></td>
+                                <td align="center" colspan="18"></td>
+                                <td align="center" colspan="18"></td>
+                                <td align="center" colspan="18"></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px 30px 70px 10px ; font-weight:bolder; vertical-align:top">SATURDAY</td>
+                                <td align="center" colspan="9"></td>
+                                <td align="center" colspan="9"></td>
+                                <td align="center" colspan="18"></td>
+                                <td align="center" colspan="18"></td>
+                                <td align="center" colspan="18"></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px 30px 70px 10px ; font-weight:bolder; vertical-align:top">SUNDAY</td>
+                                <td align="center" colspan="9"></td>
+                                <td align="center" colspan="9"></td>
+                                <td align="center" colspan="18"></td>
+                                <td align="center" colspan="18"></td>
+                                <td align="center" colspan="18"></td>
+                            </tr>
+
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

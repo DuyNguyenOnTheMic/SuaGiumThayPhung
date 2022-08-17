@@ -1,0 +1,147 @@
+﻿@model List<CAPTimeTableIT.Infrastructure.Models.UserRoleModel>
+@{
+    ViewBag.Title = "Phân Quyền";
+}
+
+<div class="main-container">
+    <div class="pd-ltr-20 xs-pd-20-10">
+        <div class="min-height-200px">
+            <div class="page-header">
+                <div class="row">
+                    <div class="col-md-6 col-sm-12">
+                        <nav aria-label="breadcrumb" role="navigation">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href=@Url.Action("Index", "Home")>Trang chủ</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Phân quyền người dùng</li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <!-- Export Datatable start -->
+            <div class="card-box mb-30">
+                <div class="pb-20">
+                    <table class="table hover data-table-statistic nowrap">
+                        <thead>
+                            <tr>
+                                <th class="export">Tên</th>
+                                <th class="export">Vai trò</th>
+                                <th>Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td id="username-@item.UserId">
+                                        @item.UserName
+                                    </td>
+                                    <td>
+                                        @item.RoleName
+                                    </td>
+                                    <td>
+                                        @Html.ActionLink("Cập nhật", "Edit", new { id = item.UserId, RoleId = item.RoleId }) |
+                                        <a href="#" onclick="deleteItem('@item.UserId');return false;" tmp-value="@item.UserId">Xóa</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- Export Datatable End -->
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="errorModal" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Thông báo lỗi</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="errorMessage">Tồn tại lớp trong học kỳ {1}. Bạn không thể xóa.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="modal fade" id="confirmModal" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Xác nhận</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="confirmMessage">Bạn có muốn xóa phần tử....</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Hủy bỏ</button>
+                <button type="button" class="btn btn-outline-primary" data-dismiss="modal" id="forceSave" onclick="deleteUser();">Tiếp tục xóa</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+@section scripts {
+<script src="~/Scripts/helpers/capstone-extensions.js"></script>
+<script type="text/javascript">
+    var waitingDeletedItem = 0;
+    function deleteItem(userId) {
+        var userNameId = "username-" + userId;
+        waitingDeletedItem = userId;
+        var userName = $("#" + userNameId).html().trim();
+        $('#confirmMessage').html("Bạn có muốn xóa người dùng '" + userName + "' này hay không?");
+        $('#confirmModal').modal();
+    }    
+
+    function deleteUser() {
+        var userValidation = validateUserAsync(waitingDeletedItem);
+        userValidation.then(function (userValidationResponse) {
+            if (userValidationResponse.status) {
+                var data = {
+                    userId: waitingDeletedItem
+                };
+                $.ajax({
+                    url: "@Url.Content("~/AspNetUsers/Delete/")",
+                    method: 'POST',
+                    data: data
+                }).done(function (response) {
+                    window.location = "@Url.Content("~/AspNetUsers/Index/")"
+                });
+            }
+            else {
+                var userNameId = "username-" + waitingDeletedItem;
+                var userName = $("#" + userNameId).html().trim();
+                var message = 'Tài khoản ' + userName + ' đã được phân công. Bạn không thể xóa';
+                $('#errorMessage').html(message);
+                $('#errorModal').modal();
+            }
+        });
+    }
+
+    function validateUserAsync(userId) {
+        var data = {
+            userId: userId
+        };
+        var promise = $.ajax({
+            url: "@Url.Content("~/AspNetUsers/ValidateUserThatNeedToBeDeleted/")",
+            method: 'POST',
+            data: data
+        }).done(function (response) {
+        });
+        return promise;
+    }
+</script>
+}

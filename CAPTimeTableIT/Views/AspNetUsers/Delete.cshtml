@@ -1,0 +1,56 @@
+﻿@model CAPTimeTableIT.Infrastructure.Entities.ApplicationUser
+
+@{
+    ViewBag.Title = "Delete";
+}
+<div class="main-container">
+    <div class="pd-ltr-20 xs-pd-20-10">
+        <div class="min-height-200px">
+            <div class="page-header">
+                <div class="row">
+                    <div class="col-md-6 col-sm-12">
+                        <div class="title">
+                            <h2>Delete</h2>
+
+                            <h3>Are you sure you want to delete this?</h3>
+                            <div>
+                                <h4>AspNetUser</h4>
+                                <hr />
+                                <dl class="dl-horizontal">
+                                    <dt>
+                                        @Html.DisplayNameFor(model => model.Email)
+                                    </dt>
+
+                                    <dd>
+                                        @Html.DisplayFor(model => model.Email)
+                                    </dd>
+                                    
+                                   @* <dt>
+                                        @Html.DisplayNameFor(model => model.)
+                                    </dt>
+
+                                    <dd>
+                                        @Html.DisplayFor(model => model.RoleName)
+                                    </dd>*@
+
+                                </dl>
+
+                                @using (Html.BeginForm())
+                                {
+                                    @Html.AntiForgeryToken()
+
+                                    <div class="form-actions no-color">
+                                        <input type="submit" value="Delete" class="btn btn-outline-danger" /> |
+                                        @Html.ActionLink("Back to List", "Index")
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

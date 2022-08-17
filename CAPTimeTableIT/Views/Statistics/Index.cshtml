@@ -1,0 +1,66 @@
+﻿@using CAPTimeTableIT.Infrastructure.Models.Statistics;
+@model List<SummaryReport>
+
+@{
+    Layout = "~/Views/Shared/_DataTableLayout.cshtml";
+    ViewBag.Title = "Thống Kê";
+
+    var Semesters = ViewBag.Semesters as SelectList;
+    int latestSemesterId = ViewBag.LatestSemesterId;
+}
+
+<div class="main-container">
+    <div class="pd-ltr-20 xs-pd-20-10">
+        <div class="min-height-200px">
+            <div class="page-header">
+                <div class="row">
+                    <div class="col-md-6 col-sm-12">
+                        <nav aria-label="breadcrumb" role="navigation">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="@Url.Action("Calendar","Calendar")">Trang chủ</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Thống kê theo học kỳ</li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <table class="table data-table-statistic hover nowrap" style="background-color:white">
+                <thead>
+                    <tr style="background-color: #222659; color: white">
+                        <th scope="col" class="export">Học kỳ</th>
+                        <th scope="col" class="export">Năm học</th>
+                        <th scope="col" class="export">Giảng viên</th>
+                        <th scope="col" class="export">Tiết học</th>
+                        <th scope="col" class="export">Giờ học</th>
+                        <th scope="col" class="table-plus datatable-nosort"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var row in Model)
+                    {
+                        <tr>
+                            <th scope="row">@row.Name</th>
+                            <td>@row.StartYear - @row.EndYear</td>
+                            <td>@row.TotalTeacher</td>
+                            <td>@row.TotalTietHoc</td>
+                            <td>@row.TotalHour giờ</td>
+                            <td><a href='@Url.Content("~/Statistics/StatisticsViewTab/" + row.SemesterId)'>Xem chi tiết</a></td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@section scripts {
+    <script src="~/Scripts/helpers/capstone-extensions.js"></script>
+    <script type="text/javascript">
+    $(document).ready(function () {
+        $('#semesterSelectedList').on('change', function () {
+            var url = '@Url.Content("~/Statistics/Index/")' + this.value;
+            window.location.assign(url);
+        });
+    });
+    </script>
+}

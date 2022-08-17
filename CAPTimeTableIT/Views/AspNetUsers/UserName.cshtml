@@ -1,0 +1,63 @@
+﻿@model List<CAPTimeTableIT.Infrastructure.Models.UserRoleModel>
+@*@model List<CAPTimeTableIT.Infrastructure.Entities.ApplicationRole>*@
+@{
+    ViewBag.Title = "Hồ Sơ Người Dùng";
+}
+
+<div class="main-container">
+    <div class="pd-ltr-20 xs-pd-20-10">
+        <div class="min-height-200px">
+            <div class="page-header">
+                <div class="row">
+                    <div class="col-md-6 col-sm-12">
+                        @*<div class="title">
+                                <h4>Tài khoản</h4>
+                            </div>*@
+                        <nav aria-label="breadcrumb" role="navigation">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href=@Url.Action("Index", "Home")>Trang chủ</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Hồ sơ người dùng</li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <!-- Export Datatable start -->
+            <div class="card-box mb-30">
+                
+                <div class="pb-20">
+                    <table class="table hover multiple-select-row data-table-statistic nowrap">
+                        <thead>
+                            <tr>
+                                <th class="export">Tên</th>
+                                <th class="export">Mã CBGD</th>
+                                <th class="export">Vai trò</th>                                
+                                <th class="table-plus datatable-nosort">Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @item.UserName
+                                    </td>
+                                    <td>
+                                        @item.StaffCode
+                                    </td>
+                                    <td>
+                                        @item.RoleName
+                                    </td>
+                                    <td>
+                                        @Html.ActionLink("Cập nhật", "EditUserName", new { id = item.UserId })
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- Export Datatable End -->
+        </div>
+    </div>
+</div>

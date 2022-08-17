@@ -1,0 +1,172 @@
+﻿@model List<CAPTimeTableIT.Infrastructure.Models.Semesters.SemesterSummary>
+
+@{
+    Layout = "~/Views/Shared/_DataTableLayout.cshtml";
+    ViewBag.Title = "Danh sách học kì";
+}
+
+<div class="main-container">
+    <div class="pd-ltr-20 xs-pd-20-10">
+        <div class="min-height-200px">
+            <div class="page-header">
+                <div class="row">
+                    <div class="col-md-6 col-sm-12">
+                        <nav aria-label="breadcrumb" role="navigation">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href=@Url.Action("Index", "Home")>Trang chủ</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Quản lý học kì</li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <!-- Export Datatable start -->
+            <div class="card-box mb-30">
+                <div class="pd-20">
+                    <h4 class="text-blue h4">Quản lý học kì</h4>
+                    <p>
+                        <a class="btn btn-primary" href="@Url.Action("Create", "Semester")">Thêm mới học kì</a>
+                    </p>
+                </div>
+                <div class="pb-20">
+                    <table class="table data-table-statistic hover nowrap">
+                        <thead>
+                            <tr>
+                                <th class="export">Học kì</th>
+                                <th class="export">Năm bắt đầu</th>
+                                <th class="export">Năm kết thúc</th>
+                                <th class="export">Tuần bắt đầu</th>
+                                <th class="export">Đã phân công</th>
+                                <th class="export">Số môn học</th>
+                                <th class="export">Ngày bắt đầu</th>
+                                <th class="table-plus datatable-nosort">Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @foreach (var semester in Model)
+                            {
+                                <tr>
+                                    <td id="semester-name-@semester.SemesterId">
+                                        @semester.Name
+                                    </td>
+                                    <td>
+                                        @semester.StartYear
+                                    </td>
+                                    <td>
+                                        @semester.EndYear
+                                    </td>
+                                    <td>
+                                        @semester.ListWeek
+                                    </td>
+                                    <td>
+                                        @semester.TotalAssignedClass lớp
+                                    </td>
+                                    <td>
+                                        @semester.TotalSubject
+                                    </td>
+                                    <td>
+                                        @semester.StartTime.ToShortDateString()
+                                    </td>
+                                    <td>
+                                        <a href="@Url.Action("Edit", new { id = semester.SemesterId })">Cập nhật</a> |
+                                        <a href="#" class="btnDelete" tmp-value="@semester.SemesterId">Xóa học kỳ</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- Export Datatable End -->
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="errorModal" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Thông báo lỗi</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="errorMessage">Tồn tại lớp trong học kỳ {1}. Bạn không thể xóa.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="modal fade" id="confirmModal" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Xác nhận</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="confirmMessage">Bạn có muốn xóa phần tử....</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Hủy bỏ</button>
+                <button type="button" class="btn btn-outline-primary" data-dismiss="modal" id="forceSave" onclick="deleteSemester();">Tiếp tục xóa</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+@section scripts {
+    <script src="~/Scripts/helpers/capstone-extensions.js"></script>
+    <script type="text/javascript">
+    var waitingDeletedItem = 0;
+    $(document).ready(function () {
+        $('.btnDelete').click(function () {
+            var val = $(this).attr('tmp-value');
+            waitingDeletedItem = val;
+            var semesterNameId = "semester-name-" + val;
+            var semesterName = $("#" + semesterNameId).html();
+            $('#confirmMessage').html("Bạn có muốn xóa học kỳ " + semesterName);
+            $('#confirmModal').modal();
+        });
+    });
+
+    function deleteSemester() {
+        var semesterValidation = validateSemesterAsync(waitingDeletedItem);//promise se goi trong tuong lai gan
+        semesterValidation.then(function (semesterValidationResponse) {
+            if (semesterValidationResponse.status) {
+                $.ajax({
+                    url: "@Url.Content("~/semester/DeleteConfirmed/")" + waitingDeletedItem,
+                    method: 'POST'
+                }).done(function (response) {
+                    window.location = "@Url.Content("~/Semester/ManageSemester/")"
+                });
+            }
+            else {
+                var semesterNameId = "semester-name-" + waitingDeletedItem;
+                var semesterName = $("#" + semesterNameId).html();
+                var message = 'Tồn tại lớp trong học kỳ ' + semesterName + '. Bạn không thể xóa';
+                $('#errorMessage').html(message);
+                $('#errorModal').modal();
+            }
+        });
+    }
+
+    function validateSemesterAsync(semesterId) {
+        var promise = $.ajax({
+            url: "@Url.Content("~/semester/ValidateSemesterThatNeedToBeDeleted/")" + semesterId,
+            method: 'POST'
+        }).done(function (response) {
+        });
+        return promise;
+    }
+    </script>
+}
+

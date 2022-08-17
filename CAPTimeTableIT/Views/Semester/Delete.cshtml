@@ -1,0 +1,45 @@
+﻿@model CAPTimeTableIT.Domain.Semester
+
+@{
+    ViewBag.Title = "Delete";
+}
+<div class="main-container">
+    <div class="pd-ltr-20 xs-pd-20-10">
+        <div class="min-height-200px">
+            <div class="page-header">
+                <div class="row">
+                    <div class="col-md-6 col-sm-12">
+                        <nav aria-label="breadcrumb" role="navigation">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href=@Url.Action("ManageSemester", "Semester")>Quản lý học kì</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Xóa Học kỳ</li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <div class="pd-20 bg-white border-radius-4 box-shadow mb-30">
+                <h4 class="text-blue h4">Thông tin chi tiết</h4>
+                <br />
+                <div>
+                    <label><b>Tên: </b></label> @Html.DisplayFor(model => model.Name) <br /><br />
+                    <label><b>Năm học bắt đầu: </b></label> @Html.DisplayFor(model => model.StartYear)<br /><br />
+                    <label><b>Năm học kết thúc: </b></label> @Html.DisplayFor(model => model.EndYear)<br /><br />
+                    <label><b>Tuần bắt đầu: </b></label> @Html.DisplayFor(model => model.ListWeek)<br /><br />
+                    <label><b>Ngày bắt đầu: </b></label> @Html.DisplayFor(model => model.StartTime)<br /><br />
+                </div>
+
+
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+
+                    <div class="form-actions no-color">
+                        <input type="submit" value="Xóa" onclick="return confirm('Bạn có muốn xóa?')" class="btn btn-outline-danger" /> |
+                        @Html.ActionLink("Quay lại", "ManageSemester")
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

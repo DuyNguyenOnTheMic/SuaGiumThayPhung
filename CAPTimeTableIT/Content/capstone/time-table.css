@@ -1,0 +1,60 @@
+﻿.tableFixHead {
+    overflow: auto;
+    height: 700px;
+}
+
+.tableFixHead thead tr.first th, thead tr.first td {
+    position: sticky;
+    top: 0;
+    z-index: 11;
+    padding: 40px 20px; 
+    text-align: center;
+}
+
+/*.tableFixHead thead tr.second th, thead tr.second td {
+    position: sticky;
+    z-index: 11;
+    text-align: center;
+}*/
+
+/* Just common table stuff. Really. */
+table {
+    border-collapse: collapse;
+    /*width: 100%;*/
+}
+
+th, td {
+    padding: 1px 1px;
+}
+
+th {
+    background: #650000;
+}
+
+.lastCellBorder {
+    border-right-color: black;
+    border-right-style: solid;
+    border-right-width: 5px;
+}
+
+.subject-box {
+    z-index: 1;
+    color: white;
+    border: groove;
+    white-space: nowrap;
+    margin: 10px !important;
+    border-color: black;
+    border-radius: 20px !important;
+    padding: 10px !important;
+    padding-bottom: 0px !important;
+    width: 224px;
+    height: 80px;
+}
+
+.subject-box.theory {
+    background-color: #AD6C0B !important;
+}
+
+.subject-box.practice {
+    background-color: #E8E49A !important;
+}

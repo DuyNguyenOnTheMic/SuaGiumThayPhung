@@ -1,0 +1,58 @@
+﻿.deleteButton {
+    position: absolute;
+    top: -21px;
+    left: 229px;
+    padding-bottom: 2px;
+    padding-top: 2px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.container-class {
+    z-index: 1;
+    color: white;
+    border: groove;
+    white-space: nowrap;
+    margin: 10px;
+    border-color: black;
+    border-radius: 20px;
+    padding: 10px;
+    padding-bottom: 0px;
+    width: 250px;
+    height: 100px;
+}
+
+.container-class.theory {
+    background-color: #AD6C0B
+}
+
+
+.container-class.practice {
+    background-color: #E8E49A
+}
+
+.container-class.opacity {
+    opacity: 0.5;
+}
+
+.opacity {
+    opacity: 0.5;
+}
+
+.theory{
+    background-color: #AD6C0B
+}
+
+
+.practice{
+    background-color: #E8E49A
+}
+
+.subject {
+    width: 200px;
+    height: 38px;
+    text-align: center;
+    font-weight: bold;
+    padding-top: 6px;
+}
+

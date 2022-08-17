@@ -1,0 +1,125 @@
+﻿@using CAPTimeTableIT.Models.Users;
+@model CAPTimeTableIT.Models.TimeTableView.TeacherTimeTableViewModel
+
+@{
+    Layout = "~/Views/Shared/_TimeTableLayout.cshtml";
+    ViewBag.Title = "Thời khóa biểu cá nhân";
+    var hover = Model.ClassViewModels;
+    UserRoleViewModel currentUserRole = ViewBag.UserRole;
+    var Semesters = ViewBag.Semesters as SelectList;
+    int latestSemesterId = ViewBag.LatestSemesterId;
+}
+
+
+<div class="main-container">
+    <div class="pd-ltr-20 xs-pd-20-10">
+        <div class="min-height-200px">
+            <div class="page-header">
+                <div class="row">
+                    <div class="col-md-6 col-sm-6">
+                        <nav aria-label="breadcrumb" role="navigation">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="@Url.Action("PersonalCalendar","PersonalCalendar")">Trang chủ</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Thời khóa biểu cá nhân</li>
+                            </ol>
+                        </nav>
+                    </div>
+                    @if (latestSemesterId > 0)
+                    {
+                        <div class="col-md-6 col-sm-6 text-right">
+                            <div class="dropdown">
+                                <select id="semesterSelectedList" class="custom-select2 form-control" style="width:20%" required name="semesterId">
+                                    @foreach (var semester in Semesters)
+                                    {
+                                        if (semester.Value == latestSemesterId.ToString())
+                                        {
+                                            <option value='@semester.Value' selected>Học kì @semester.Text</option>
+                                        }
+                                        else
+                                        {
+                                            <option value='@semester.Value'>Học kì @semester.Text</option>
+                                        }
+
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+            <label style="font-size:20px ; color:red"><b>LƯU Ý</b></label> <br />
+            <textarea disabled name="state" style="width: 200px; height: 38px; text-align: center; font-weight: bold; padding-top: 6px; background-color: #E8E49A ">MÔN THỰC HÀNH</textarea>
+            <textarea disabled name="state" style="width: 200px; height: 38px; text-align: center; font-weight: bold; padding-top: 6px; background-color: #AD6C0B; color:white  ">MÔN LÝ THUYẾT</textarea>
+
+            <table border="1" align="center" style="background-color:snow; width:1630px">
+                <thead style="background-color:#650000; color:white; font-size:20px; font-weight:bold; height:80px">
+                    <tr align="center" style=" text-align: center;">
+                        <th class="text-uppercase" colspan="1">Time</th>
+                        @foreach (var day in Model.DayOfWeek)
+                        {
+                            <th class="text-uppercase" colspan="1"> THỨ @day</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody style="text-align:center; font-weight:bolder; font-size:20px; ">
+                    @foreach (var tiet in Model.Sotiet)
+                    {
+                    <tr>
+                        <td @*class="align-middle"*@ width="50px" style="background-color: #222659; color: white; white-space: nowrap " colspan="1" >@tiet -  @(tiet + 2)</td>
+                        @foreach (var day in Model.DayOfWeek)
+                        {
+                            var capstoneClass = Model.ClassViewModels.Where(t => t.TietS == tiet && t.ThuS == day).ToList();
+                            if (capstoneClass != null)
+                            {
+                                    <td colspan="1" width="400px">
+                                        @foreach (var item in capstoneClass)
+                                        {
+                                            if (item.LoaiHP == "Thực hành")
+                                            {
+                                                 <div style="background-color: #E8E49A; color: black; border: groove; margin: 23px;padding: 9px; width:350px; border-color: black; border-radius: 20px; padding-bottom: 0px; text-align: left">
+                                                    <p>@item.SubjectInfo.Name</p>
+                                                    <p>@item.MaLHP</p>
+                                                    <p>@item.LoaiHP</p>
+                                                    <p>@item.Phong</p>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div style="background-color: #AD6C0B; color: black; border: groove; margin: 23px; padding: 9px; width: 350px; border-color: black; border-radius: 20px; padding-bottom: 0px; text-align: left ">
+                                                    <p>@item.SubjectInfo.Name</p>
+                                                    <p>@item.MaLHP</p>
+                                                    <p>@item.LoaiHP</p>
+                                                    <p>@item.Phong</p>
+                                                </div>
+                                            }
+                                        }
+                                       
+                                    </td>
+
+                            }
+                             else
+                            {
+                              <td colspan = "1"></td >
+                            }
+
+                        }
+                    </tr>
+                    }
+                </tbody>
+            </table>
+            <br />
+
+        </div>
+    </div>
+
+</div>
+@section scripts {
+    <script type="text/javascript">
+    $(document).ready(function () {
+        $('#semesterSelectedList').on('change', function () {            
+            var url = '@Url.Content("~/PersonalCalendar/PersonalCalendar/")' + this.value;
+            window.location.assign(url);
+        });
+    });
+    </script>
+}

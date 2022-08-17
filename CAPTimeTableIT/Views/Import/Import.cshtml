@@ -1,0 +1,187 @@
+﻿@using CAPTimeTableIT.Infrastructure.Models;
+@model CAPTimeTableIT.Models.Home.ImportViewModel
+
+@{
+    ViewBag.Title = "Import Thời Khóa Biểu";
+    var Semesters = ViewBag.Semesters as SelectList;
+    List<ErrorMessage> errors = ViewBag.ErrorMessages;
+}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+<div class="main-container">
+    <div class="pd-ltr-20 xs-pd-20-10">
+        <div class="min-height-200px">
+            <div class="page-header">
+                <div class="row">
+                    <div class="col-md-6 col-sm-12">
+                        <nav aria-label="breadcrumb" role="navigation">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="@Url.Action("Calendar", "Home")">Trang chủ</a></li>
+                                <li class="breadcrumb-item"><a href="@Url.Action("AssignLecture", "Import")">Phân công giảng dạy</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Import Thời khóa biểu</li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pd-20 card-box mb-30">
+                <div class="clearfix mb-20">
+                    <div class="pull-left">
+                        <h4 class="text-blue h4">Import Thời khóa biểu</h4>
+                    </div>
+                </div>
+                <div class="form-group">
+                    @using (Html.BeginForm("ImportDataFromExcel", "Import", FormMethod.Post, new { enctype = "multipart/form-data", id = "UploadForm" }))
+                    {
+                        <label>Chọn học kì:</label>
+                        <div class="dropdown">
+                            <select id="selectBox" class="custom-select col-5" onclick="changeFunc();" required name="semesterId">
+                                @foreach (var semester in Semesters)
+                                {
+                                    <option value=@semester.Value>Học kì @semester.Text</option>
+                                }
+                                @*<option value="13" style="text-align:center; background-color: darkblue; color: white">----- Thêm học kì -----</option>*@
+                            </select>
+                        </div>
+                        <label>File Thời khóa biểu</label>
+                        <input type="file" name="excel" id="excelUpload" onchange="checkfile(this);" accept=".xls, .xlsx" class="form-control-file form-control height-auto" required />
+                        <br />
+                        if (errors != null)
+                        {
+                            foreach (var error in errors)
+                            {
+                                <div style="color: red">
+                                    Dòng thứ @error.RowIndex: @error.PropertyName có giá trị @error.Value @error.Message
+                                </div>
+
+                            }
+                            <div style="color: forestgreen">
+                                Dữ liệu còn lại Import thành công
+                            </div>
+                        }
+
+                        <br />
+                        <button id="UploadFileBtn" type="submit" class="btn btn-success" data-toggle="modal" data-target="#myModal3" data-backdrop="static" style="float: left">Import</button>
+                        <a href="@Url.Action("AssignLecture", "Import")" style="float: right" ; class="btn btn-danger" onclick="return confirm('Bạn có muốn Hủy?')">Hủy</a>
+                        <br />
+
+                    }
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="myModal3" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                @*<button type="button" class="close" data-dismiss="modal">×</button>*@
+                <h4 class="modal-title">Dữ liệu đang được Import vào hệ thống</h4>
+
+            </div>
+            <div class="modal-body">
+                <p>Vui lòng đợi trong giây lát</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="modal fade" id="errorModal" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Thông báo lỗi</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="errorMessage">Modal body text goes here.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+@section scripts{
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#UploadFileBtn').prop("disabled", true);
+    });
+    function changeFunc() {
+        var selectBox = document.getElementById("selectBox");
+        var selectedValue = selectBox.options[selectBox.selectedIndex].value;
+        if (selectedValue == 13) {
+            window.location.href = "@Url.Action("Create2", "Semester")";
+        }
+    }
+    function checkfile(sender) {
+        var checkFileResult = true;
+        var input = sender;
+        if (input.files.length == 0) {
+            checkFileResult = false;
+        }
+        else {
+            var validExts = new Array(".xlsx", ".xls");
+            var fileExt = sender.value;
+            fileExt = fileExt.substring(fileExt.lastIndexOf('.'));
+            if (validExts.indexOf(fileExt) < 0) {
+                //alert("File bạn chọn không thuộc định dạng .xls hoặc .xlsx \nVui lòng chọn file đúng định dạng!");
+                $("#excelUpload").val(null);
+                $('#errorMessage').html("File bạn chọn không thuộc định dạng .xls hoặc .xlsx \nVui lòng chọn file đúng định dạng!");
+                $('#errorModal').modal();
+                checkFileResult = false;
+            }
+        }        
+        //has at least 1 file that is selected
+        $('#UploadFileBtn').prop("disabled", !checkFileResult);
+        return checkFileResult;
+    }
+    function confirmation3(button) {
+        var ask = confirm("Bạn đã chọn Import Thời khóa biểu \nNếu bạn đã xác định muốn Import vui lòng click OK!")
+        //if (ask) {
+        //    alert("Bạn đã chọn chức năng THAY THẾ \n*Lưu ý: Nếu bạn lưu file excel này thì kết quả sẽ THAY THẾ thời khóa biểu");
+        //}
+        //else {
+        //    alert("Bạn đã hủy chon chức năng THAY THẾ !");
+        //    radio.checked = false;
+        //}
+    }
+    $('#UploadFile').click(function () {
+        if ($(this).val().length > 1) {
+            $('#UploadForm').submit();
+            $('html').fadeTo('slow', 0);
+        }
+    });
+    $('#example').DataTable({
+        dom: 'Bfrtip',
+        buttons: {
+            dom: {
+                button: {
+                    class: 'btn'
+                }
+            },
+            buttons: [
+                {
+                    extend: 'excel',
+                    text: 'Export to excel',
+                    excelStyles: {
+                        template: 'header_blue'
+                    }
+                }
+            ]
+        }
+    });
+    </script>
+}

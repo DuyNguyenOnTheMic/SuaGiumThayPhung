@@ -1,0 +1,220 @@
+﻿@{
+    ViewBag.Title = "Thống kê View tab";
+    int startYear = ViewBag.StartYear;
+    int endYear = ViewBag.EndYear;
+}
+
+<div class="main-container">
+    <div class="pd-ltr-20 xs-pd-20-10">
+        <div class="min-height-200px">
+            <div class="page-header">
+                <div class="row">
+                    <div class="col-md-6 col-sm-12">
+                        <nav aria-label="breadcrumb" role="navigation">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="@Url.Action("Calendar","Calendar")">Trang chủ</a></li>
+                                <li class="breadcrumb-item"><a href="@Url.Action("YearlyReport","Statistics")">Thống kê theo năm</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Thống kê chi tiết</li>
+
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-box height-100-p overflow-hidden">
+                <div class="profile-tab height-100-p">
+                    <div class="tab height-100-p">
+                        <ul class="nav nav-tabs customtab" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" data-toggle="tab" href="#timeline" role="tab">Thống kê theo cột</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#tasks" role="tab">Thống kê theo bảng</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <!-- statistics Graph form -->
+                            <div id="timeline" class="tab-pane fade show active" role="tabpanel">
+                                <div id="main" style="width: 1400px;height:500px;"></div>
+                            </div>
+
+                            <!-- statistics table form -->
+                            <div class="tab-pane fade" id="tasks" role="tabpanel">
+                                <div id="tableStatistic" class="pb-20">
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.3.0/mustache.min.js"></script>
+<script id="my-template" type="x-tmpl-mustache">
+    <table id='teacherStatisticTable' class="table hover multiple-select-row data-table-export nowrap" style="background-color:white">
+        <thead>
+            <tr style="background-color: #222659; color: white">
+                <th></th>
+                <th>Giảng viên</th>
+                <th>Giờ dạy</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#data}}
+            <tr>
+                <td></td>
+                <td>{{fullName}}</td>
+                <td>{{totalHours}}</td>
+            </tr>
+            {{/data}}
+        </tbody>
+    </table>
+</script>
+<script type="text/javascript">
+    window.addEventListener('DOMContentLoaded', function () {
+	    var image = document.getElementById('image');
+	    var cropBoxData;
+	    var canvasData;
+	    var cropper;
+
+	    $('#modal').on('shown.bs.modal', function () {
+		    cropper = new Cropper(image, {
+			    autoCropArea: 0.5,
+			    dragMode: 'move',
+			    aspectRatio: 3 / 3,
+			    restore: false,
+			    guides: false,
+			    center: false,
+			    highlight: false,
+			    cropBoxMovable: false,
+			    cropBoxResizable: false,
+			    toggleDragModeOnDblclick: false,
+			    ready: function () {
+				    cropper.setCropBoxData(cropBoxData).setCanvasData(canvasData);
+			    }
+		    });
+	    }).on('hidden.bs.modal', function () {
+		    cropBoxData = cropper.getCropBoxData();
+		    canvasData = cropper.getCanvasData();
+		    cropper.destroy();
+	    });
+	});
+    $(document).ready(function () {
+        var startYear = @startYear;
+        var endYear = @endYear;
+        var dataPromise = getData(startYear, endYear);
+        dataPromise.then(function (teacherHoursDataResponse) {
+            renderBarChart(teacherHoursDataResponse);
+            var template = $('#my-template').html();
+            var output = $('#tableStatistic');
+            console.log(teacherHoursDataResponse);
+            var result = Mustache.render(template, teacherHoursDataResponse);
+            //console.log(teacherHoursDataResponse.data);
+            output.append(result);
+            //render tables
+            setTimeout(function () {
+                var t = $('#teacherStatisticTable').DataTable({
+                    scrollCollapse: true,
+                    autoWidth: false,
+                    responsive: true,
+                    columnDefs: [{
+                        targets: "datatable-nosort",
+                        orderable: false,
+                    }],
+                    "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                    "language": {
+                        "info": "_START_-_END_ of _TOTAL_ entries",
+                        searchPlaceholder: "Search",
+                        paginate: {
+                            next: '<i class="ion-chevron-right"></i>',
+                            previous: '<i class="ion-chevron-left"></i>'
+                        }
+                    },
+                    dom: 'Bfrtp',
+                    buttons: [
+                    ]
+                });
+                t.on('order.dt search.dt', function () {
+                    let i = 1;
+
+                    t.cells(null, 0, { search: 'applied', order: 'applied' }).every(function (cell) {
+                        this.data(i++);
+                    });
+                }).draw();
+            }, 0);
+
+            //todo apply simple table
+        });
+    });
+
+    function getData(startYear, endYear) {
+        var url = "@Url.Content("~/Statistics/GetTeacherHourByStartYearAndEndYear")" + "?startYear=" + startYear + "&endYear=" + endYear;
+        console.log(url);
+        var promise = $.ajax({
+            url: url,
+            method: 'POST'
+        }).done(function (response) { });
+        return promise;
+    }
+
+    function renderBarChart(response) {
+        //render barchart
+
+        var data = response.data;
+        // Initialize the echarts instance based on the prepared dom
+        var myChart = echarts.init(document.getElementById('main'));
+
+        var dataForChart = [];
+        for (var i = 0; i < data.length; i++) {
+            var row = [];
+            row.push(data[i].userId);
+            row.push(data[i].fullName);
+            row.push(data[i].totalHours);
+            dataForChart.push(row);
+        }
+        // Specify the configuration items and data for the chart
+        var option = {
+            dataset: [
+                {
+                    dimensions: ['userId', 'fullName', 'totalHours'],
+                    source: dataForChart
+                },
+                {
+                    transform: {
+                        type: 'sort',
+                        config: { dimension: 'totalHours', order: 'asc' }
+                    }
+                }
+            ],
+            yAxis: {
+                type: 'category',
+                axisLabel: { interval: 0, rotate: 0 }
+            },
+            xAxis: {
+                type: 'value'
+            },
+            series: {
+                type: 'bar',
+                encode: { x: 'totalHours', y: 'fullName' },
+                datasetIndex: 1,
+                backgroundStyle: {
+                    color: 'rgba(201, 203, 207, 0.2)'
+                },
+                itemStyle: {
+                    color: 'rgba(54, 162, 235, 0.2)'
+                },
+                label: {
+                    show: true,
+                    position: 'right'
+                }
+            }
+        };
+
+        // Display the chart using the configuration items and data just specified.
+        myChart.setOption(option);
+    }
+</script>
+}
