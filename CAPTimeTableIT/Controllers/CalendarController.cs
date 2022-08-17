@@ -4,6 +4,7 @@ using CAPTimeTableIT.Infrastructure.Services.Abstract;
 using CAPTimeTableIT.Models.TimeTableView;
 using CAPTimeTableIT.Models.Users;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,6 +31,20 @@ namespace CAPTimeTableIT.Controllers
             _subjectService = subjectService;
             _userService = userService;
         }
+
+        public ApplicationUserManager UserManager
+        {
+            get
+            {
+                return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            }
+            private set
+            {
+                _userManager = value;
+            }
+        }
+
+
         // GET: Calendar
         public ActionResult Index()
         {
@@ -69,7 +84,7 @@ namespace CAPTimeTableIT.Controllers
             //user id
             var currentUserId = User.Identity.GetUserId();
 
-            var roles = _userManager.GetRoles(User.Identity.GetUserId());
+            var roles = UserManager.GetRoles(User.Identity.GetUserId());
             var isBcnKhoa = roles[0] == CapstoneSystem.BCNKhoaRole;
 
             //get all users()

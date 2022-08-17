@@ -169,21 +169,23 @@ namespace CAPTimeTableIT.Controllers
                 // Create new user
                 await UserManager.CreateAsync(user);
                 await UserManager.AddToRoleAsync(user.Id, "Chưa Phân Quyền");
+                return RedirectToLocal(returnUrl);
             }
 
-            if (currentUser.Roles.FirstOrDefault().ToString() == "BCN Khoa")
+            var role = UserManager.GetRoles(currentUser.Id).FirstOrDefault();
+            if (role == "BCN Khoa")
             {
                 return RedirectToAction("Calendar", "Calendar");
             }
-            if (currentUser.Roles.FirstOrDefault().ToString() == "Bộ môn")
+            if (role == "Bộ môn")
             {
                 return RedirectToAction("Calendar", "Calendar");
             }
-            if (currentUser.Roles.FirstOrDefault().ToString() == "Giảng viên")
+            if (role == "Giảng viên")
             {
                 return RedirectToAction("PersonalCalendar", "PersonalCalendar");
             }
-            if (currentUser.Roles.FirstOrDefault().ToString() == "Admin")
+            if (role == "Admin")
             {
                 return RedirectToAction("Index", "AspNetUsers");
             }
