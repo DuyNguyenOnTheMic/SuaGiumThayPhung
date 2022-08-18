@@ -82,10 +82,11 @@ namespace CAPTimeTableIT.Controllers
         private async Task<ActionResult> CalendarBySemester(int semesterId)
         {
             //user id
-            var currentUserId = User.Identity.GetUserId();
+            var email = User.Identity.Name;
+            var currentUser = _userManager.FindByEmail(email);
+            var role = _userManager.GetRoles(currentUser.Id);
 
-            var roles = UserManager.GetRoles(User.Identity.GetUserId());
-            var isBcnKhoa = roles[0] == CapstoneSystem.BCNKhoaRole;
+            var isBcnKhoa = role[0] == CapstoneSystem.BCNKhoaRole;
 
             //get all users()
             var allUsers = await _userService.GetAllAsync();
@@ -93,7 +94,7 @@ namespace CAPTimeTableIT.Controllers
             {
                 IsBcnKhoa = isBcnKhoa,
                 ApplicationUsers = allUsers, //dropdown list
-                CurrentUserId = currentUserId,
+                CurrentUserId = currentUser.Id,
             };
 
             timeTableViewModel.ClassViewModels = await _subjectService.GetAllClassInWeekAsync(semesterId);

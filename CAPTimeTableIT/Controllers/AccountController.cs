@@ -14,6 +14,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 
 namespace CAPTimeTableIT.Controllers
 {
@@ -34,7 +35,7 @@ namespace CAPTimeTableIT.Controllers
             _userService = userService;
         }
 
-        public ApplicationUserManager UserManager
+        /*public ApplicationUserManager UserManager
         {
             get
             {
@@ -44,7 +45,7 @@ namespace CAPTimeTableIT.Controllers
             {
                 _userManager = value;
             }
-        }
+        }*/
 
         //
         // GET: /Account/Login
@@ -148,7 +149,7 @@ namespace CAPTimeTableIT.Controllers
             };
 
             // Check if user exists
-            var currentUser = await UserManager.FindByEmailAsync(user.Email);
+            var currentUser = await _userManager.FindByEmailAsync(user.Email);
             if (currentUser != null)
             {
                 if (currentUser.Roles.Count != 0)
@@ -156,8 +157,10 @@ namespace CAPTimeTableIT.Controllers
                     // Add role claim to user
                     ClaimsIdentity identity = (ClaimsIdentity)User.Identity;
 
-                    var currentRole = await UserManager.GetRolesAsync(currentUser.Id);
+                    var currentRole = await _userManager.GetRolesAsync(currentUser.Id);
+                    identity.AddClaim(new Claim(ClaimTypes.Email, currentUser.Email));
                     identity.AddClaim(new Claim(ClaimTypes.Role, currentRole[0]));
+                    identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.Id));
                     IOwinContext context = HttpContext.GetOwinContext();
 
                     context.Authentication.SignOut(DefaultAuthenticationTypes.ExternalCookie);
@@ -167,12 +170,12 @@ namespace CAPTimeTableIT.Controllers
             else
             {
                 // Create new user
-                await UserManager.CreateAsync(user);
-                await UserManager.AddToRoleAsync(user.Id, "Chưa Phân Quyền");
+                await _userManager.CreateAsync(user);
+                await _userManager.AddToRoleAsync(user.Id, "Chưa Phân Quyền");
                 return RedirectToLocal(returnUrl);
             }
 
-            var role = UserManager.GetRoles(currentUser.Id).FirstOrDefault();
+            var role = _userManager.GetRoles(currentUser.Id).FirstOrDefault();
             if (role == "BCN Khoa")
             {
                 return RedirectToAction("Calendar", "Calendar");
@@ -199,6 +202,8 @@ namespace CAPTimeTableIT.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult LogOff()
         {
+            FormsAuthentication.SignOut();
+            Session.Abandon();
             /// Send an OpenID Connect sign-out request.
             HttpContext.GetOwinContext()
                         .Authentication

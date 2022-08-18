@@ -23,7 +23,7 @@ namespace CAPTimeTableIT
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             //Enable  
             System.Web.Optimization.BundleTable.EnableOptimizations = true;
-            AntiForgeryConfig.UniqueClaimTypeIdentifier = ClaimTypes.NameIdentifier;
+            AntiForgeryConfig.UniqueClaimTypeIdentifier = ClaimTypes.Email;
         }
     }
 }
