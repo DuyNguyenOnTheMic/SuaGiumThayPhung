@@ -129,10 +129,11 @@ namespace CAPTimeTableIT.Controllers
         private async Task<ActionResult> GetTimeTableAsync(int semesterId)
         {
             //user id
-            var currentUserId = User.Identity.GetUserId();
-            var createdAssignerId = User.Identity.GetUserId();
+            var email = User.Identity.Name;
+            var currentUser = _userManager.FindByEmail(email);
+            var createdAssignerId = currentUser.Id;
 
-            var roles = _userManager.GetRoles(User.Identity.GetUserId());
+            var roles = _userManager.GetRoles(currentUser.Id);
             var hasPermission = roles.Any(t => t == CapstoneSystem.SubjectRole || t == CapstoneSystem.BCNKhoaRole);
             //if (!hasPermission) return RedirectToAction("Index", "Home");
             //not Truong Bo Mon && not Ban Chu nhiem khoa => redirect
@@ -145,11 +146,11 @@ namespace CAPTimeTableIT.Controllers
             {
                 IsBcnKhoa = isBcnKhoa,
                 ApplicationUsers = allUsers, //dropdown list
-                CurrentUserId = currentUserId,
+                CurrentUserId = currentUser.Id,
             };
             if (string.IsNullOrEmpty(createdAssignerId))
             {
-                createdAssignerId = currentUserId;
+                createdAssignerId = currentUser.Id;
             }
 
             timeTableViewModel.ClassViewModels = await _subjectService.GetAllClassInWeekAsync(semesterId);
@@ -167,7 +168,7 @@ namespace CAPTimeTableIT.Controllers
             timeTableViewModel.SubjectViewModels = subjects;// await _subjectService.GetAllSubjectSummaryAsync();
             var userRoleModel = new UserRoleViewModel
             {
-                UserId = currentUserId,
+                UserId = currentUser.Id,
                 RoleName = roles[0]
             };
             ViewBag.UserRole = userRoleModel;
