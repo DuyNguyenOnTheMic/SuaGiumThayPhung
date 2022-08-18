@@ -11,6 +11,7 @@ using Microsoft.Owin.Security.OpenIdConnect;
 using System;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -150,21 +151,16 @@ namespace CAPTimeTableIT.Controllers
 
             // Check if user exists
             var currentUser = await _userManager.FindByEmailAsync(user.Email);
+            ClaimsIdentity identity = (ClaimsIdentity)User.Identity;
             if (currentUser != null)
             {
+                user.Id = currentUser.Id;
                 if (currentUser.Roles.Count != 0)
                 {
                     // Add role claim to user
-                    ClaimsIdentity identity = (ClaimsIdentity)User.Identity;
-
-                    var currentRole = await _userManager.GetRolesAsync(currentUser.Id);
+                    var currentRole = await _userManager.GetRolesAsync(user.Id);
                     identity.AddClaim(new Claim(ClaimTypes.Email, currentUser.Email));
                     identity.AddClaim(new Claim(ClaimTypes.Role, currentRole[0]));
-                    identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.Id));
-                    IOwinContext context = HttpContext.GetOwinContext();
-
-                    context.Authentication.SignOut(DefaultAuthenticationTypes.ExternalCookie);
-                    context.Authentication.SignIn(identity);
                 }
             }
             else
@@ -172,27 +168,30 @@ namespace CAPTimeTableIT.Controllers
                 // Create new user
                 await _userManager.CreateAsync(user);
                 await _userManager.AddToRoleAsync(user.Id, "Chưa Phân Quyền");
-                return RedirectToLocal(returnUrl);
+                var newRole = await _userManager.GetRolesAsync(user.Id);
+                identity.AddClaim(new Claim(ClaimTypes.Email, user.Email));
+                identity.AddClaim(new Claim(ClaimTypes.Role, newRole[0]));
             }
+            IOwinContext context = HttpContext.GetOwinContext();
 
-            var role = _userManager.GetRoles(currentUser.Id).FirstOrDefault();
-            if (role == "BCN Khoa")
+            context.Authentication.SignOut(DefaultAuthenticationTypes.ExternalCookie);
+            context.Authentication.SignIn(identity);
+
+
+            var role = _userManager.GetRoles(user.Id).FirstOrDefault();
+            switch (role)
             {
-                return RedirectToAction("Calendar", "Calendar");
+                case "BCN Khoa":
+                    return RedirectToAction("Calendar", "Calendar");
+                case "Bộ môn":
+                    return RedirectToAction("Calendar", "Calendar");
+                case "Giảng viên":
+                    return RedirectToAction("PersonalCalendar", "PersonalCalendar");
+                case "Admin":
+                    return RedirectToAction("Index", "AspNetUsers");
+                default:
+                    return RedirectToLocal(returnUrl);
             }
-            if (role == "Bộ môn")
-            {
-                return RedirectToAction("Calendar", "Calendar");
-            }
-            if (role == "Giảng viên")
-            {
-                return RedirectToAction("PersonalCalendar", "PersonalCalendar");
-            }
-            if (role == "Admin")
-            {
-                return RedirectToAction("Index", "AspNetUsers");
-            }
-            return RedirectToLocal(returnUrl);
         }
 
 
